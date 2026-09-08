@@ -4,7 +4,7 @@
   --muted: #6b6b70;
   --rule: #e4e4e7;
   --link: #0b5cd5;
-  --accent: #e8542f;
+  --accent: #14663a;
   --card: #fafafa;
 }
 
@@ -15,7 +15,8 @@
     --muted: #9a9aa2;
     --rule: #2e2e34;
     --link: #7fb0ff;
-    --accent: #ff7a52;
+    /* Lifted from #14663a, which is unreadable on the dark ground. */
+    --accent: #3fa36b;
     --card: #1e1e23;
   }
 }

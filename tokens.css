@@ -1,0 +1,119 @@
+/* ==========================================================================
+   Mayran Media — Design Tokens
+   --------------------------------------------------------------------------
+   Single source of truth for color, spacing, type and motion. Every other
+   stylesheet (style.css, and any future page's CSS) should consume these
+   custom properties rather than hardcoding values, so the whole site — this
+   page and every page built after it — stays visually consistent from one
+   file. See DESIGN-SPEC.md for the full contract and usage notes.
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------------
+     Color — light mode (default / no preference)
+     --------------------------------------------------------------------- */
+  --color-bg: #ffffff;              /* page background */
+  --color-bg-elevated: #f5f5f7;     /* cards, header/footer surfaces */
+  --color-bg-overlay: rgba(255, 255, 255, 0.8); /* translucent sticky header */
+  --color-text: #1d1d1f;            /* primary text */
+  --color-text-secondary: #6e6e73;  /* secondary/meta text — 5.07:1 on white */
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-border-strong: rgba(0, 0, 0, 0.45); /* strengthened for 3:1 non-text
+     contrast (WCAG 1.4.11) — see DESIGN-SPEC.md; measured 3.35:1 on --color-bg,
+     3.31:1 on --color-bg-elevated */
+  --shadow-color: rgba(0, 0, 0, 0.3); /* elevation shadows (app-card hover,
+     phone illustration) — decorative, no contrast requirement */
+
+  /* The one brand accent. #14663a is the light-mode green — it is NOT
+     readable on dark backgrounds (see dark override below). Never use
+     --color-accent's light-mode value directly against a dark surface. */
+  --color-accent: #14663a;               /* 7.0:1 on --color-bg (light) */
+  --color-accent-soft: rgba(20, 102, 58, 0.1); /* decorative fills ONLY, never behind text */
+  --color-focus-ring: #14663a;
+
+  /* Text/icon color to place ON TOP of a solid --color-accent surface
+     (primary buttons, solid badges). Deliberately its own token, not an
+     alias of --color-bg, even though the values match today. */
+  --color-on-accent: #ffffff;
+
+  /* ---------------------------------------------------------------------
+     Spacing scale — 4px-rooted, used for every margin/padding/gap
+     --------------------------------------------------------------------- */
+  --space-3xs: 0.25rem;   /* 4px  */
+  --space-2xs: 0.5rem;    /* 8px  */
+  --space-xs: 0.75rem;    /* 12px */
+  --space-sm: 1rem;       /* 16px */
+  --space-md: 1.5rem;     /* 24px */
+  --space-lg: 2rem;       /* 32px */
+  --space-xl: 3rem;       /* 48px */
+  --space-2xl: 4rem;      /* 64px */
+  --space-3xl: 6rem;      /* 96px */
+  --space-section: clamp(4rem, 3rem + 5vw, 8rem); /* vertical rhythm between sections */
+
+  /* ---------------------------------------------------------------------
+     Type — system font stacks + fluid, two-tier scale
+     --------------------------------------------------------------------- */
+  --font-display: -apple-system, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  --font-text: -apple-system, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+
+  /* Display tier — confident headlines. Use with --font-display. */
+  --text-display-1: clamp(2.5rem, 1.9rem + 3vw, 4.75rem);   /* hero H1 */
+  --text-display-2: clamp(2rem, 1.6rem + 2vw, 3.25rem);     /* section H2 */
+  --text-display-3: clamp(1.375rem, 1.2rem + 0.8vw, 1.875rem); /* card/H3 titles */
+
+  /* Text tier — calm body copy. Use with --font-text. */
+  --text-body-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem); /* lead paragraphs */
+  --text-body: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);         /* default body */
+  --text-small: clamp(0.8125rem, 0.8rem + 0.1vw, 0.9375rem);   /* meta, nav, badges, captions */
+
+  --leading-tight: 1.08;   /* headlines */
+  --leading-snug: 1.3;     /* lead paragraphs */
+  --leading-normal: 1.6;   /* body copy */
+
+  /* ---------------------------------------------------------------------
+     Radii
+     --------------------------------------------------------------------- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+
+  /* ---------------------------------------------------------------------
+     Motion — one easing curve, three durations. Zeroed under reduced
+     motion below so every transition that consumes these becomes instant
+     without needing its own media query.
+     --------------------------------------------------------------------- */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 450ms;
+  --duration-slow: 800ms;
+  --reveal-distance: 24px; /* how far .reveal elements travel while fading in */
+
+  /* ---------------------------------------------------------------------
+     Layout
+     --------------------------------------------------------------------- */
+  --container-max: 1120px;  /* max width of page content */
+  --measure: 640px;         /* max width for a block of body copy */
+  --header-height: 64px;
+}
+
+/* Dark-mode token overrides intentionally removed (Jonathan's call): the
+   site now always renders the light palette above, regardless of the
+   visitor's OS setting, for a brighter, more "inviting" first impression
+   in line with how apple.com product pages read — bright and white by
+   default rather than following system dark mode. `color-scheme: light`
+   on :root (below) keeps native form controls/scrollbars light too. If
+   dark mode is ever wanted back, the removed block's values are in git
+   history — this file's the single place they'd need to return. */
+:root {
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --reveal-distance: 0px;
+  }
+}

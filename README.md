@@ -3,22 +3,37 @@
 Static site for Mayran Media, served by GitHub Pages from the `main` branch.
 
 This repository is public because the pages it serves have to be publicly
-reachable — both app stores and AdMob fetch them. It contains no game source;
-Sliceball lives in its own private repository.
+reachable — both app stores and AdMob fetch them. It contains no game source
+or build assets; Sliceball lives in its own private Unity project.
 
 ## Layout
 
 | Path | Purpose |
 | --- | --- |
-| `index.html` | Landing page |
-| `sliceball/` | Sliceball product page |
+| `index.html` | Studio landing page |
+| `tokens.css` | Shared design tokens (colors, type, spacing) used by every page |
+| `style.css` | Shared component styles, built on `tokens.css` |
+| `script.js` | Shared scroll-reveal / video behavior, loaded with `defer` |
+| `sliceball/` | Sliceball product page and its `assets/` (screenshots, gameplay clips) |
 | `sliceball/privacy/` | Privacy policy — **required** by the App Store and Google Play |
 | `sliceball/support/` | Support page — the App Store **requires** a support URL to submit |
 | `app-ads.txt` | Declares AdMob as an authorised seller of this publisher's inventory |
-| `style.css` | Shared stylesheet |
+| `DESIGN-SPEC.md` | Design decision log — tokens, components, and the history of what was tried and why. Keep it current as the site changes, not just at launch. |
 
-Plain HTML and CSS, no build step and no dependencies. Edit a file, commit,
-and GitHub Pages redeploys within about a minute.
+Plain HTML, CSS, and JS — no build step, no dependencies, no external
+scripts or trackers. Edit a file, commit, and GitHub Pages redeploys within
+about a minute.
+
+## Security baseline
+
+Every page's `<head>` carries a meta-tag Content Security Policy
+(`default-src 'self'`, no external sources). This is the strongest
+protection achievable in plain HTML — GitHub Pages cannot serve custom HTTP
+response headers on any plan, even on a custom domain with HTTPS enforced,
+so there is no real HSTS, `X-Frame-Options`, or `Permissions-Policy` at the
+platform level. If header-level hardening is ever needed, the standard fix
+is putting the domain behind Cloudflare's free tier as a DNS-level reverse
+proxy in front of GitHub Pages (not a hosting move).
 
 ## app-ads.txt
 

@@ -1,131 +1,1118 @@
-:root {
-  --bg: #ffffff;
-  --fg: #1c1c1e;
-  --muted: #6b6b70;
-  --rule: #e4e4e7;
-  --link: #0b5cd5;
-  --accent: #14663a;
-  --card: #fafafa;
-}
+/* ==========================================================================
+   Mayran Media — Base styles, layout primitives & shared components
+   --------------------------------------------------------------------------
+   Consumes the custom properties defined in tokens.css. Load tokens.css
+   before this file. See DESIGN-SPEC.md for the component contract.
+   ========================================================================== */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #16161a;
-    --fg: #ececf0;
-    --muted: #9a9aa2;
-    --rule: #2e2e34;
-    --link: #7fb0ff;
-    /* Lifted from #14663a, which is unreadable on the dark ground. */
-    --accent: #3fa36b;
-    --card: #1e1e23;
+/* ---- Reset ------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
-
-* { box-sizing: border-box; }
-
-html { -webkit-text-size-adjust: 100%; }
-
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--fg);
-  font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100svh;
 }
-
-main {
-  max-width: 44rem;
-  margin: 0 auto;
-  padding: 3rem 1.25rem 4rem;
-}
-
-a { color: var(--link); }
-a:hover { text-decoration: none; }
-
-h1 {
-  font-size: 1.95rem;
-  line-height: 1.2;
-  letter-spacing: -.022em;
-  margin: 0 0 .35rem;
-}
-
-h2 {
-  font-size: 1.15rem;
-  letter-spacing: -.01em;
-  margin: 2.6rem 0 .75rem;
-  padding-top: 1.4rem;
-  border-top: 1px solid var(--rule);
-}
-
-h3 {
-  font-size: 1rem;
-  margin: 1.8rem 0 .5rem;
-}
-
-p, li { margin: 0 0 .9rem; }
-ul { padding-left: 1.25rem; }
-
-.sub {
-  color: var(--muted);
-  font-size: .95rem;
-  margin: 0 0 2.5rem;
-}
-
-.lede {
-  font-size: 1.1rem;
-  color: var(--muted);
-  margin: 0 0 2.5rem;
-}
-
-.box {
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-  background: var(--card);
-  padding: 1rem 1.15rem;
-  margin: 1.5rem 0;
-}
-
-.box p:last-child, .box ul:last-child, ul li:last-child { margin-bottom: 0; }
-
-.brand {
-  display: inline-block;
-  font-weight: 600;
-  letter-spacing: -.01em;
-  text-decoration: none;
-  color: var(--fg);
-  margin-bottom: 2.5rem;
-  font-size: .95rem;
-}
-
-.brand span { color: var(--accent); }
-
-.card {
+img,
+svg,
+video {
   display: block;
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  background: var(--card);
-  padding: 1.25rem 1.35rem;
-  margin: 1rem 0;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+a {
+  color: inherit;
   text-decoration: none;
+}
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+}
+
+/* ---- Base type / color --------------------------------------------------- */
+html {
+  background: var(--color-bg);
+}
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-text);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  overflow-wrap: anywhere; /* long unbroken strings (URLs, etc.) wrap instead
+    of overflowing narrow viewports; inherited site-wide */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+h1 {
+  font-size: var(--text-display-1);
+  font-weight: 500; /* lighter than h2/h3's 600 - a huge headline at 600 reads as a heavy block of ink */
+}
+h2 {
+  font-size: var(--text-display-2);
+}
+h3 {
+  font-size: var(--text-display-3);
+}
+p {
   color: inherit;
 }
 
-.card:hover { border-color: var(--muted); }
-.card h3 { margin: 0 0 .3rem; font-size: 1.1rem; }
-.card p { margin: 0; color: var(--muted); font-size: .95rem; }
-
-code {
-  font: .875em ui-monospace, SFMono-Regular, Menlo, monospace;
-  background: color-mix(in srgb, var(--fg) 8%, transparent);
-  padding: .1em .35em;
+/* ---- Focus visibility --------------------------------------------------- */
+/* Never remove outlines without replacing them — this is the replacement,
+   applied uniformly to every focusable element on the site. */
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
   border-radius: 4px;
 }
 
-footer {
-  margin-top: 3.5rem;
-  padding-top: 1.4rem;
-  border-top: 1px solid var(--rule);
-  color: var(--muted);
-  font-size: .9rem;
+/* ---- Skip link ------------------------------------------------------------ */
+.skip-link {
+  position: absolute;
+  left: var(--space-sm);
+  top: -100%;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* was ~39px with padding+line-height alone */
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  padding-inline: var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-small);
+  font-weight: 600;
+  transition: top var(--duration-fast) var(--ease-standard);
+}
+.skip-link:focus {
+  top: var(--space-sm);
 }
 
-footer a { color: var(--muted); }
+/* ---- Layout primitives --------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+.section {
+  padding-block: var(--space-section);
+}
+.section-header {
+  max-width: var(--measure);
+  margin-inline: auto;
+  margin-bottom: var(--space-2xl);
+  text-align: center;
+}
+.section-header > * + * {
+  margin-top: var(--space-sm);
+}
+.measure {
+  max-width: var(--measure);
+}
+
+/* ---- Type utilities ------------------------------------------------------ */
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-text);
+  font-size: var(--text-small);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.text-display-1 {
+  font-size: var(--text-display-1);
+}
+.text-display-2 {
+  font-size: var(--text-display-2);
+}
+.text-body-lg {
+  font-size: var(--text-body-lg);
+  font-family: var(--font-text);
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  line-height: var(--leading-snug);
+}
+.text-small {
+  font-size: var(--text-small);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+/* ---- Scroll-reveal utility -------------------------------------------------
+   Add `.reveal` to any element that should fade/slide in on scroll. Wrap a
+   set of sibling `.reveal` elements in `.reveal-group` to stagger them.
+
+   Default (below, NO media query) is fully visible/legible — this is what
+   EVERY visitor gets unconditionally, including one whose JS is blocked
+   or fails to load. That matters because a media query alone cannot fix
+   this: `prefers-reduced-motion` only ever reports an OS setting, never
+   whether script.js actually ran, so scoping the hidden starting state to
+   `@media (prefers-reduced-motion: no-preference)` alone would still hide
+   `.reveal` content forever for the single largest group of visitors —
+   anyone with the (default) "no preference" motion setting whose JS is
+   blocked — since that media query matches regardless of JS.
+
+   The hidden state is therefore additionally gated on `html.js`, a class
+   the tiny inline `<script>` at the top of each page's <head> adds
+   synchronously (see index.html) — NOT the deferred script.js. If that
+   inline script never runs (JS disabled/blocked), `html.js` is never
+   added, `html.js .reveal` never matches, and every `.reveal` element
+   simply stays at its visible default. Only when both (a) motion is
+   allowed AND (b) JS is confirmed running does the hidden/animate-in
+   state apply — at which point the deferred script.js's
+   IntersectionObserver is what adds `.is-visible`.
+   ------------------------------------------------------------------------ */
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+.reveal-group > .reveal:nth-child(1) {
+  transition-delay: 0ms;
+}
+.reveal-group > .reveal:nth-child(2) {
+  transition-delay: 90ms;
+}
+.reveal-group > .reveal:nth-child(3) {
+  transition-delay: 180ms;
+}
+.reveal-group > .reveal:nth-child(4) {
+  transition-delay: 270ms;
+}
+.reveal-group > .reveal:nth-child(5) {
+  transition-delay: 360ms;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal {
+    opacity: 0;
+    transform: translateY(var(--reveal-distance));
+    transition: opacity var(--duration-slow) var(--ease-standard),
+      transform var(--duration-slow) var(--ease-standard);
+  }
+  html.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---- Site header / nav ---------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--color-bg-overlay);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--color-border);
+}
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  min-height: var(--header-height);
+  padding-block: var(--space-xs);
+}
+.wordmark {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  padding-block: var(--space-2xs);
+}
+.wordmark .accent {
+  color: var(--color-accent);
+}
+/* Footer's smaller wordmark — was a repeated inline `style="font-size:
+   1.05rem"` on 4 pages; moved into a real class instead. Still a
+   bespoke value rather than a type-scale token (it doesn't correspond to
+   any existing --text-* size), which is fine for a one-off brand-mark
+   tweak, but keep it here — in style.css — not back in an inline style,
+   if it's ever touched again. */
+.wordmark--footer {
+  font-size: 1.05rem;
+}
+.site-nav ul {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-2xs);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--color-text);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.site-nav a:hover {
+  color: var(--color-accent);
+}
+@media (max-width: 640px) {
+  .site-nav {
+    flex-basis: 100%;
+    order: 3;
+  }
+  .site-nav ul {
+    justify-content: center;
+    gap: var(--space-md);
+  }
+}
+
+/* ---- Buttons --------------------------------------------------------------
+   Apple-style: small, understated pills. Never louder than the copy next
+   to them. `.btn-primary` is solid-accent, `.btn-secondary` is outlined —
+   use secondary far more often than primary.
+   ------------------------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-height: 44px;
+  padding-inline: var(--space-lg);
+  border-radius: var(--radius-full);
+  font-family: var(--font-text);
+  font-size: var(--text-small);
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: background var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    filter var(--duration-fast) var(--ease-standard);
+}
+.btn-primary {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+}
+.btn-secondary:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+@media (max-width: 480px) {
+  .hero__actions .btn {
+    width: 100%;
+  }
+}
+
+/* Text link with a trailing arrow — used for card/footer "learn more"
+   affordances. `.link-cta` is often a plain decorative span (see
+   `.app-card__cta`) sitting inside an element that is ALREADY a link via
+   the stretched-link technique; only make it a real <a> when it isn't
+   nested inside another interactive element. */
+.link-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-accent);
+}
+/* Tag-qualified on purpose: `.link-cta` is used two ways — a real
+   standalone <a> (privacy/support cross-links) that needs a real touch
+   target, and a decorative `<span class="link-cta" aria-hidden="true">`
+   inside app-cards (not interactive itself; the whole card is already
+   the click target via the stretched-link). Scoping the 44px minimum to
+   `a.link-cta` only means it doesn't inflate the non-interactive span. */
+a.link-cta {
+  min-height: 44px;
+}
+.link-cta .arrow {
+  display: inline-block;
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+.app-card:hover .link-cta .arrow {
+  transform: translateX(3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-card:hover .link-cta .arrow {
+    transform: none;
+  }
+}
+
+/* ---- Badges -----------------------------------------------------------
+   Base badge is a bordered chip on the page background (NOT a tinted
+   fill) so its text keeps full contrast against --color-bg in both
+   themes — a `--color-accent-soft` tint behind small accent-colored text
+   was measured and fails AA in dark mode, hence this shape.
+   ------------------------------------------------------------------------ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: var(--space-3xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text);
+  font-size: var(--text-small);
+  font-weight: 600;
+  line-height: 1;
+}
+.badge--coming-soon {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* ---- Hero ---------------------------------------------------------------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-block: calc(var(--space-section) + var(--space-lg)) var(--space-section);
+}
+.hero::before {
+  /* A soft ambient color wash behind the hero, the same radial-gradient
+     language `.app-card__visual` already uses for its product-card
+     background -- reused here rather than inventing a new treatment.
+     This is the kind of quiet, colored glow apple.com puts behind its
+     hero product shots; a flat white hero by contrast reads as plain
+     and a little cold. Purely decorative: negative z-index keeps it
+     behind all real content, pointer-events:none keeps it inert. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(120% 60% at 50% 0%, var(--color-accent-soft), transparent 65%);
+  pointer-events: none;
+}
+.hero__content {
+  max-width: 840px;
+}
+.hero__content > * + * {
+  margin-top: var(--space-md);
+}
+.hero h1 {
+  max-width: 16ch;
+}
+.hero__lead {
+  max-width: var(--measure);
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-top: var(--space-xl) !important;
+}
+
+/* Progressive-enhancement scroll parallax on the hero — the one flourish
+   beyond the standard .reveal fade. Guarded by @supports AND reduced
+   motion, and purely decorative: nothing depends on it running.
+
+   IMPORTANT: this uses a document SCROLL-progress timeline
+   (`scroll(root)`) with an explicit pixel range, not a `view()`
+   timeline. A `view()` timeline computes progress from the subject
+   element's position relative to the scrollport (phases like "entry"/
+   "cover") — that model assumes the user scrolls the element into view.
+   The hero is the very first section on the page, so it's already fully
+   "entered" and already partway through "covering" the scrollport at
+   scroll position zero, purely because of its height vs. the viewport.
+   That meant `entry 0% cover 45%` was already past its end keyframe at
+   scroll=0, so the hero rendered permanently at 40% opacity from first
+   paint, on every page load, with no scrolling required to reproduce it
+   (confirmed by checking getComputedStyle(...).opacity at scrollTop 0 in
+   real Chromium). `scroll(root)` ties progress to actual document scroll
+   position instead, so 0px scroll is guaranteed to be exactly the `from`
+   keyframe regardless of the hero's own height — this same CSS is shared
+   by two heroes of different heights (home vs. Sliceball), so it must not
+   depend on the subject element's geometry. Verify any future change to
+   this block by checking computed opacity at scrollTop 0, not by reading
+   the range values and assuming they're correct. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__content {
+      animation: hero-parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 400px;
+    }
+    @keyframes hero-parallax {
+      from {
+        opacity: 1;
+        transform: none;
+      }
+      to {
+        opacity: 0.4;
+        transform: translateY(-16px) scale(0.98);
+      }
+    }
+  }
+}
+
+/* ---- Games grid & app card --------------------------------------------
+   `.app-card` is the reusable product-card component for the "Our Games"
+   grid. It is built and tested with exactly one card today (Sliceball)
+   but the grid and card are written to scale to many — adding a second
+   game later is just another `.app-card` inside `.games-grid`, no
+   redesign. See DESIGN-SPEC.md for the full markup contract.
+   ------------------------------------------------------------------------ */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 400px));
+  justify-content: center;
+  gap: var(--space-xl);
+  margin-top: var(--space-2xl);
+}
+
+.app-card {
+  position: relative; /* containing block for the stretched-link ::after */
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard),
+    border-color var(--duration-base) var(--ease-standard);
+}
+.app-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-border-strong);
+  box-shadow: 0 24px 48px -24px var(--shadow-color);
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-card:hover {
+    transform: none;
+  }
+}
+
+.app-card__visual {
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+  background: radial-gradient(120% 100% at 50% 15%, var(--color-accent-soft), transparent 60%),
+    var(--color-bg);
+}
+
+.app-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-lg);
+}
+.app-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-2xs);
+}
+.app-card__platforms {
+  font-size: var(--text-small);
+  color: var(--color-text-secondary);
+}
+.app-card__title {
+  font-size: var(--text-display-3);
+}
+/* Stretched-link: the title link is the ONLY real link in the card. Its
+   ::after is absolutely positioned and stretched to `inset: 0`, so the
+   whole card is clickable while there is exactly one accessible link per
+   card — no nested/duplicate links, no separate "Learn more" anchor.
+   `.app-card__link` deliberately has NO `position` of its own: an
+   absolutely positioned element resolves against its nearest positioned
+   ANCESTOR, not its parent, so leaving this un-positioned lets the
+   `::after` skip past the anchor's own small box and stretch against
+   `.app-card` (which IS `position: relative`) instead — that's what
+   makes the whole card clickable rather than just the title text. Giving
+   `.app-card__link` its own `position: relative` was a real bug shipped
+   here once already: it made the anchor itself the containing block,
+   shrinking the clickable `::after` down to the title's own ~137×35px
+   box. Do not add `position` back to this selector. */
+.app-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.app-card__description {
+  color: var(--color-text-secondary);
+  font-size: var(--text-body);
+}
+.app-card__footer {
+  margin-top: auto;
+  padding-top: var(--space-sm);
+}
+
+/* ---- Sliceball abstract visual -----------------------------------------
+   Pure CSS/SVG-free illustration of the core mechanic (a card stack
+   holding a ball above a floor line) — no screenshots or product art
+   exist yet. `.sliceball-scene` is specific to this one game; a future
+   game's card should get its own `.<gamename>-scene` visual following the
+   same pattern (see DESIGN-SPEC.md).
+
+   Default (below) is a static "mid-slice" illustrative frame — this IS
+   the prefers-reduced-motion fallback, applied unconditionally. Motion is
+   only ever ADDED on top of it inside the `no-preference` media query.
+   ------------------------------------------------------------------------ */
+.sliceball-scene {
+  width: min(220px, 100%);
+}
+.sliceball-scene__phone {
+  position: relative;
+  aspect-ratio: 9 / 18.5;
+  padding: 10px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: clamp(28px, 10%, 40px);
+  box-shadow: 0 30px 60px -30px var(--shadow-color);
+}
+.sliceball-scene__island {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 38%;
+  height: 8px;
+  background: var(--color-text);
+  opacity: 0.15;
+  border-radius: var(--radius-full);
+}
+.sliceball-scene__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 20%;
+  background: var(--color-bg-elevated);
+  border-radius: clamp(20px, 8%, 30px);
+  overflow: hidden;
+}
+.sliceball-scene__floor {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: 14%;
+  height: 2px;
+  background: var(--color-accent);
+  opacity: 0.55;
+}
+.sliceball-scene__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.sliceball-scene__card {
+  display: block;
+  height: 10px;
+  border-radius: 4px;
+  background: var(--color-border-strong);
+}
+.sliceball-scene__card:nth-child(1) {
+  width: 46px;
+  /* static fallback: topmost card already mid-slice */
+  opacity: 0.4;
+  transform: scale(0.75) translateX(-8px);
+}
+.sliceball-scene__card:nth-child(2) {
+  width: 56px;
+}
+.sliceball-scene__card:nth-child(3) {
+  width: 66px;
+}
+.sliceball-scene__ball {
+  position: absolute;
+  bottom: calc(20% + 34px);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 6px var(--color-accent-soft);
+  /* static fallback: ball mid-drop, between the top two cards */
+  transform: translateY(14px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sliceball-scene__ball {
+    animation: sliceball-drop 7s var(--ease-standard) infinite alternate;
+  }
+  .sliceball-scene__card:nth-child(1) {
+    animation: sliceball-slice-1 7s var(--ease-standard) infinite alternate;
+  }
+  .sliceball-scene__card:nth-child(2) {
+    animation: sliceball-slice-2 7s var(--ease-standard) infinite alternate;
+  }
+}
+@keyframes sliceball-drop {
+  0%,
+  28% {
+    transform: translateY(0);
+  }
+  38%,
+  58% {
+    transform: translateY(22px);
+  }
+  70%,
+  100% {
+    transform: translateY(44px);
+  }
+}
+@keyframes sliceball-slice-1 {
+  0%,
+  28% {
+    opacity: 1;
+    transform: none;
+  }
+  36%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6) translateX(-10px);
+  }
+}
+@keyframes sliceball-slice-2 {
+  0%,
+  58% {
+    opacity: 1;
+    transform: none;
+  }
+  68%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6) translateX(10px);
+  }
+}
+
+/* ---- Sliceball showcase: real gameplay video ---------------------------
+   Same "one game, one `.<name>-*` visual living in the shared sheet"
+   pattern as `.sliceball-scene` above — this is Sliceball's second visual.
+
+   This used to be a scroll-scrubbed crossfade through six screenshots
+   (view-timeline + @keyframes, one per frame). Jonathan tried it and felt
+   the image-to-image motion looked "robotic" and asked for a real screen
+   recording instead. A muted, looping, autoplaying <video> of an actual
+   Simulator recording (captured, trimmed, and compressed — see
+   DESIGN-SPEC.md's asset-pipeline note) replaces the whole crossfade
+   mechanism: no view-timeline, no @keyframes, no scroll-linked JS.
+   The CSS-drawn phone chassis (notch/buttons/glass highlight) that
+   originally wrapped this video is ALSO gone now — see the
+   `.showcase__video-card` comment below for why — so the video sits in a
+   plain rounded card, not a fake device frame.
+   The six screenshots didn't disappear — they moved to their own
+   `.showcase-gallery` section right below, as a plain swipeable strip
+   (the same peek/snap pattern this gallery used to use as its no-motion
+   fallback), since they're still useful for a static, closer look at
+   specific screens.
+
+   Later still: went from one card to two side by side (iPhone + iPad),
+   to show real footage on both device families rather than implying
+   iPad support only via the "coming to iOS and Android" text. The
+   iPhone clip is genuine real-device footage (recorded on an actual
+   iPhone, not a Simulator) -- Jonathan's original ask, all the way back,
+   was for this to look like "a real phone playing the game," and actual
+   hardware footage satisfies that more directly than any Simulator
+   recording could. The iPad clip is a fresh Simulator recording. Each
+   card's `aspect-ratio` matches its own source recording's native pixel
+   dimensions exactly (see `.showcase__video-card` below) -- don't reuse
+   one card's ratio for the other, and don't assume both will ever share
+   one ratio going forward.
+
+   Most recent round: Jonathan asked to bring back "a real phone" around
+   the video after all -- but explicitly not the earlier illustrated
+   chassis (bezel/notch/buttons), which had read as more "mockup" than
+   the plain screenshots it replaced. Three genuinely different frame
+   options were mocked up and shown side by side (a plain rounded card
+   with no frame at all; a refined photorealistic-style device bezel;
+   and a minimal glass edge) before touching this file -- see
+   DESIGN-SPEC.md's `.showcase` section for the full writeup of all
+   three. Jonathan picked the minimal glass edge: a thin translucent
+   ring plus a soft floating shadow, `.showcase__video-card` below --
+   deliberately not an illustrated phone (no notch, no buttons, no claim
+   to a specific model), just enough materiality to say "this sits
+   inside something."
+   ------------------------------------------------------------------------ */
+.showcase {
+  position: relative;
+  padding-block: var(--space-section);
+}
+.showcase::before {
+  /* Same ambient glow treatment as .hero, mirrored underneath this
+     section too -- Apple product pages repeat a soft color wash behind
+     each major showcase moment, not just the very first one. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(100% 70% at 50% 40%, var(--color-accent-soft), transparent 70%);
+  pointer-events: none;
+}
+.showcase__grid {
+  display: grid;
+  gap: var(--space-2xl);
+  align-items: center;
+}
+.showcase__copy h2 {
+  margin-top: var(--space-2xs);
+}
+.showcase__list {
+  margin-top: var(--space-md);
+  padding-left: 1.1em;
+  color: var(--color-text-secondary);
+}
+.showcase__list li {
+  padding-left: var(--space-3xs);
+}
+.showcase__list li + li {
+  margin-top: var(--space-2xs);
+}
+.showcase__stage {
+  /* Two devices side by side (iPhone + iPad), to show the game is real,
+     playable footage on both -- not just "coming to iOS and Android" as
+     text. Wraps to stacked on narrow viewports rather than squeezing
+     both cards below a usable width. */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
+}
+.showcase__device {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.showcase__device-label {
+  font-size: var(--text-small);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+}
+.showcase__video-card {
+  /* Minimal glass edge -- the direction Jonathan picked from three
+     options mocked up side by side (see the section comment above and
+     DESIGN-SPEC.md). A thin translucent ring (the gradient background
+     + 1px border below) and a soft floating shadow, NOT an illustrated
+     phone: no notch, no side buttons, nothing claiming a specific
+     device model. `padding` on this element IS the ring's thickness --
+     the video sits inset from it, so don't remove the padding without
+     also rethinking the ring (it'd collapse to nothing). This also
+     still sidesteps the crop problem the old chassis caused: each
+     card's aspect-ratio matches its own recording's native ratio
+     exactly (iPhone real-device footage: 498:1080; iPad Simulator
+     footage: 720:960 -- see the two rules below), so `object-fit:
+     cover` on `.showcase__video` never has to crop anything; it's only
+     there as a safety net if a future re-recording comes in at a
+     slightly different ratio. Sized smaller than the old single-card
+     layout (min(220px, 42vw) vs. the old min(300px, 78vw)) since two
+     sit side by side. */
+  position: relative;
+  width: min(220px, 42vw);
+  padding: 5px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--color-border);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 30px 60px -30px var(--shadow-color);
+}
+.showcase__device:nth-child(1) .showcase__video-card {
+  aspect-ratio: 498 / 1080;
+}
+.showcase__device:nth-child(2) .showcase__video-card {
+  aspect-ratio: 720 / 960;
+}
+.showcase__video {
+  /* The "screen" inside the glass ring -- its own slightly smaller
+     radius so the ring reads as a frame around it, not just a shadow
+     the video happens to sit near. `background: #000` (moved here from
+     `.showcase__video-card`, which is now the translucent ring instead
+     of the screen) shows through as a dark backdrop before the video's
+     first frame paints. */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: calc(var(--radius-lg) - 5px);
+  background: #000;
+}
+.showcase__video-toggle {
+  /* A visible, always-available pause control for the auto-looping
+     video -- WCAG 2.2.2 (Pause, Stop, Hide) requires a way to stop any
+     auto-starting motion that lasts more than 5 seconds, and this loops
+     indefinitely. See script.js for the click handler and the
+     prefers-reduced-motion gate that keeps this video from ever
+     auto-starting for users who've asked for less motion. */
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 4;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.showcase__video-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.showcase__video-toggle-icon {
+  display: none;
+}
+.showcase__video-toggle[data-state="playing"] .showcase__video-toggle-icon--pause,
+.showcase__video-toggle[data-state="paused"] .showcase__video-toggle-icon--play {
+  display: block;
+}
+.showcase__video-toggle-icon--pause {
+  width: 3px;
+  height: 12px;
+  background: #fff;
+  box-shadow: 6px 0 0 #fff;
+}
+.showcase__video-toggle-icon--play {
+  width: 0;
+  height: 0;
+  margin-left: 2px; /* optical centering: a triangle's visual weight sits left of its box */
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 10px solid #fff;
+}
+
+@media (min-width: 700px) {
+  .showcase__grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+  }
+}
+
+/* ---- Sliceball screenshot gallery (secondary) ---------------------------
+   The six real screenshots that used to crossfade inside the showcase
+   phone now live here instead, as a plain horizontally-scrolling,
+   snap-to-frame strip — the exact same peek/swipe pattern
+   `.showcase__screen`/`.showcase__frame` used as their no-motion
+   fallback, just without a phone chassis around each shot. */
+.showcase-gallery {
+  padding-block: var(--space-section);
+}
+.showcase-gallery__strip {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+  padding-inline: var(--space-md);
+  padding-bottom: var(--space-2xs);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.showcase-gallery__strip::-webkit-scrollbar {
+  display: none;
+}
+.showcase-gallery__shot {
+  flex: 0 0 auto;
+  width: min(220px, 55vw);
+  height: auto;
+  aspect-ratio: 900 / 1955;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  scroll-snap-align: center;
+  box-shadow: 0 20px 40px -24px var(--shadow-color);
+}
+
+/* ---- Contact ------------------------------------------------------------- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-2xl);
+}
+.contact-card {
+  padding: var(--space-lg);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.contact-card__label {
+  font-size: var(--text-small);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2xs);
+}
+.contact-card a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-accent);
+  word-break: break-word;
+}
+
+/* ---- Footer ---------------------------------------------------------------- */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  padding-block: var(--space-2xl);
+}
+.footer-grid {
+  /* Explicit equal-width columns, not auto-fit's greedy sizing -- auto-fit
+     with minmax(160px, 1fr) can size the 4 columns unevenly depending on
+     exactly how much space is left over, which read as lopsided. Fixed
+     column counts per breakpoint keep every column in a row the same
+     width, always. */
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+@media (max-width: 700px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 420px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.footer-col h3 {
+  font-family: var(--font-text);
+  font-size: var(--text-small);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+.footer-col ul {
+  /* This <ul> has no class attribute (it's reached via this descendant
+     selector, not `ul[class]`), so the site-wide bullet/padding reset near
+     the top of this file doesn't touch it -- without these three lines it
+     keeps the browser default disc bullet and ~40px indent, throwing off
+     alignment under each column heading. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+.footer-col a {
+  /* Deliberately NOT the 44px touch target used for primary nav/buttons
+     elsewhere on the site (see the Accessibility checklist in
+     DESIGN-SPEC.md) -- Jonathan asked for these three columns visually
+     tighter. 32px still clears WCAG 2.2's 24x24px minimum target size
+     (the AA bar; 44px is Apple HIG's stricter recommendation, not an AA
+     requirement), so this stays accessible while reading denser, closer
+     to how apple.com's own footer links sit close together. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-size: var(--text-small);
+  color: var(--color-text);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.footer-col a:hover {
+  color: var(--color-accent);
+}
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-small);
+  color: var(--color-text-secondary);
+}
+
+/* ---- Legal / support long-form content ------------------------------------
+   `.legal-content` is the flowing-prose wrapper used by the privacy and
+   support pages (sliceball/privacy/, sliceball/support/): a long run of
+   headings, paragraphs and lists that doesn't break into homepage-style
+   `.section-header` blocks. Vertical rhythm applies between direct children
+   only; a `h2` gets extra space above it to mark a new major topic. Pair
+   with `.measure` on the same element to keep line length readable.
+   `.legal-list` is the matching bullet-list treatment (the global reset
+   strips list-style/padding from any `ul[class]`, so this restores both).
+   ---------------------------------------------------------------------- */
+.legal-content > * + * {
+  margin-top: var(--space-lg);
+}
+.legal-content > h2 {
+  margin-top: var(--space-2xl);
+}
+.legal-content > h2:first-child {
+  margin-top: 0;
+}
+.legal-list {
+  list-style: disc;
+  padding-left: 1.25em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+/* Plain prose links inside .legal-content (e.g. the Google policy links
+   and cross-links to support/privacy in the privacy/support pages) were
+   invisible as links: the global reset sets `a { color: inherit;
+   text-decoration: none; }`, and nothing in .legal-content overrode it,
+   so these read as plain text with no affordance that they're clickable.
+   Every other link pattern on the site (.link-cta, .contact-card a,
+   .footer-col a, .site-nav a) already gets an explicit accent/underline
+   treatment — this brings plain in-paragraph links into line. Does not
+   apply to .legal-list markers or headings, only actual <a> elements. */
+.legal-content a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+.legal-content a:hover {
+  text-decoration-thickness: 2px;
+}

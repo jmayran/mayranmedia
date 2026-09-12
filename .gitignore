@@ -1,1 +1,14 @@
+node_modules
+
+# Working/scratch backups kept locally per project convention (never
+# delete without approval) -- these must never be committed, since some
+# have held privacy-sensitive raw footage (e.g. an exposed Game Center
+# username toast) before being superseded. Any "_to_delete" folder
+# anywhere in the tree is excluded, not just this one path, so the same
+# convention stays safe if reused elsewhere on the site.
+**/_to_delete/
+
+# OS/editor noise
 .DS_Store
+Thumbs.db
+*.swp

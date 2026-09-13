@@ -534,10 +534,20 @@ a.link-cta {
    by two heroes of different heights (home vs. Sliceball), so it must not
    depend on the subject element's geometry. Verify any future change to
    this block by checking computed opacity at scrollTop 0, not by reading
-   the range values and assuming they're correct. */
+   the range values and assuming they're correct.
+
+   Storefront hero: the parallax applies to the COPY column only, never
+   to the featured `.app-card`. The 400px range was tuned for a text-only
+   hero; the featured card is ~760px tall and, on a phone, starts ~700px
+   down the page, so fading the whole `.hero__content` dimmed the
+   Sliceball screenshot to 40% before it had even scrolled into view
+   (Jonathan, 2026-09-13: "it fades too quickly, the preview of
+   sliceball"). The product shot is the point of the hero — it stays at
+   full opacity until it scrolls away like any other content. */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
-    .hero__content {
+    .hero:not(.hero--storefront) .hero__content,
+    .hero--storefront .hero__copy {
       animation: hero-parallax linear both;
       animation-timeline: scroll(root);
       animation-range: 0px 400px;

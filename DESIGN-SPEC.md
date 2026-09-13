@@ -338,6 +338,15 @@ replace the card and the primary button with the new app, and move the
 previous app's card into the `#apps` grid** — never put two apps in the
 hero. The hero is a spotlight, the grid is the complete catalog.
 
+**The scroll parallax fades the copy column only, never the featured
+card.** `hero-parallax` (opacity → 0.4 over the first 400px of scroll)
+is scoped to `.hero__copy` on the storefront hero and to `.hero__content`
+everywhere else. The card is ~760px tall and sits under the copy on a
+phone, so fading the whole content block dimmed the screenshot before it
+had even reached the viewport — Jonathan flagged it 2026-09-13 ("fades
+too quickly"). Verify any change here by reading the card's computed
+opacity at several scroll positions at 375px wide, not just at scroll 0.
+
 **The `#apps` "All apps" grid is dormant while only one app exists.**
 With a single app it would show the hero card a second time, which
 Jonathan explicitly did not want (2026-09-13). The whole section is kept

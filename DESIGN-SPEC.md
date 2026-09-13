@@ -334,10 +334,19 @@ lead, `.hero__actions`) on the left, `.hero__featured` holding a single
 `.app-card` on the right — collapsing to one column under 800px. The
 primary button is that app's direct store link ("Get Sliceball on Google
 Play"); the secondary is "Get help" → `#help`. **When a new app ships,
-replace the card and the primary button with the new app, and leave the
-previous app's card in the `#apps` grid** — never put two apps in the
-hero. The same card markup is deliberately repeated in the grid: the hero
-is a spotlight, the grid is the complete catalog.
+replace the card and the primary button with the new app, and move the
+previous app's card into the `#apps` grid** — never put two apps in the
+hero. The hero is a spotlight, the grid is the complete catalog.
+
+**The `#apps` "All apps" grid is dormant while only one app exists.**
+With a single app it would show the hero card a second time, which
+Jonathan explicitly did not want (2026-09-13). The whole section is kept
+in `index.html` as an HTML comment (with inner comment markers escaped
+as `<!~~ ~~>`), and the nav/hub "Apps" links point at `#top` for now.
+When the second app ships: move app one's card into the grid, put app
+two in the hero, uncomment the section, and point "Apps" back at
+`#apps`. The footer's Apps column and both hubs list every app
+regardless.
 
 Wording is "apps", not "games", everywhere the studio is described
 (Jonathan's call, 2026-09-13, so a future non-game fits without a copy

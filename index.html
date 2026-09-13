@@ -31,7 +31,7 @@
     <a class="wordmark" href="#top">Mayran <span class="accent">Media</span></a>
     <nav class="site-nav" aria-label="Primary">
       <ul>
-        <li><a href="#apps">Apps</a></li>
+        <li><a href="#top">Apps</a></li>
         <li><a href="support/">Support</a></li>
         <li><a href="privacy/">Privacy</a></li>
         <li><a href="#contact">Contact</a></li>
@@ -115,7 +115,16 @@
     </div>
   </section>
 
-  <!-- ============================ ALL APPS ============================= -->
+  <!-- ====================== ALL APPS (dormant) ========================
+       With one app, this grid would repeat the hero card, which Jonathan
+       did not want. When the SECOND app ships: (1) move the previous
+       app's <article class="app-card"> into the grid below, (2) put the
+       new app in the hero, (3) uncomment this whole section, (4) point the
+       nav "Apps" link back at #apps. See DESIGN-SPEC.md → "Storefront
+       hero". Kept as a comment so restoring it is an uncomment, not a
+       rebuild.
+
+  <!~~ ============================ ALL APPS ============================= ~~>
   <section class="section" id="apps">
     <div class="container">
       <div class="section-header reveal">
@@ -125,9 +134,9 @@
       </div>
 
       <div class="games-grid reveal">
-        <!-- .app-card: reusable product-card component. Copy this whole
+        <!~~ .app-card: reusable product-card component. Copy this whole
              <article> for each additional app — see DESIGN-SPEC.md.
-             `.reveal` lives on `.games-grid`, not on individual cards. -->
+             `.reveal` lives on `.games-grid`, not on individual cards. ~~>
         <article class="app-card">
           <div class="app-card__visual">
             <div class="sliceball-scene" aria-hidden="true">
@@ -162,10 +171,11 @@
             </div>
           </div>
         </article>
-        <!-- Next app goes here as another <article class="app-card">. -->
+        <!~~ Next app goes here as another <article class="app-card">. ~~>
       </div>
     </div>
   </section>
+  -->
 
   <!-- ============================= ABOUT =============================== -->
   <section class="section" id="about">

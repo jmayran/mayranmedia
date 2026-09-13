@@ -87,6 +87,9 @@
   --duration-fast: 150ms;
   --duration-base: 450ms;
   --duration-slow: 800ms;
+  --duration-reveal: 350ms; /* scroll-reveal fade -- short enough that
+     normal-speed scrolling never arrives at a section before it has
+     finished fading in. See the .reveal block in style.css. */
   --reveal-distance: 24px; /* how far .reveal elements travel while fading in */
 
   /* ---------------------------------------------------------------------
@@ -114,6 +117,7 @@
     --duration-fast: 0ms;
     --duration-base: 0ms;
     --duration-slow: 0ms;
+    --duration-reveal: 0ms;
     --reveal-distance: 0px;
   }
 }

@@ -52,14 +52,40 @@
       });
     },
     {
-      threshold: 0.15,
-      rootMargin: "0px 0px -40px 0px", // trigger slightly before full entry
+      // Reveal as soon as any sliver of the element approaches the viewport.
+      // The previous values (threshold 0.15 + a NEGATIVE bottom rootMargin)
+      // required a section to be 15% inside an already-shrunk viewport before
+      // its fade even started, so at normal scrolling speed the reader reached
+      // the section first and saw a blank/ghosted band of page. An any-pixel
+      // threshold plus a generous POSITIVE bottom margin starts the fade ~300px
+      // before the section scrolls in, so it is fully opaque on arrival.
+      threshold: 0,
+      rootMargin: "0px 0px 300px 0px",
     }
   );
 
   revealEls.forEach(function (el) {
     observer.observe(el);
   });
+
+  // Safety net. Anything already at/near the viewport right now -- first paint,
+  // or a scroll position restored by a refresh or a #hash link -- is revealed
+  // immediately instead of waiting on an observer callback that may not fire
+  // until the next scroll. Also guarantees content can never be left
+  // permanently invisible if a single observer callback is missed.
+  function revealInView() {
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    revealEls.forEach(function (el) {
+      if (el.classList.contains("is-visible")) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < vh + 300 && r.bottom > -300) {
+        el.classList.add("is-visible");
+        observer.unobserve(el);
+      }
+    });
+  }
+  revealInView();
+  window.addEventListener("load", revealInView);
 })();
 
 

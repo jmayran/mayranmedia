@@ -654,6 +654,40 @@ a.link-cta {
   padding-top: var(--space-sm);
 }
 
+/* ---- Real screenshot inside .app-card__visual --------------------------
+   `.app-card__shot` replaces the abstract CSS scene once an app has
+   shipped (Jonathan, 2026-09-13: "fix the image with a real screengrab").
+   It is the Sliceball page's `.showcase__video-card` glass ring, copied
+   as-is per DESIGN-SPEC ("copy .showcase__video-card rather than
+   reopening the frame question"), sized the same way the abstract
+   scene was: a fixed width (`min(200px, 100%)`) and the screenshot's own
+   `aspect-ratio`, so the 4:3 visual box simply grows to fit it and
+   nothing is cropped. Do NOT size it by height (`align-self: stretch`
+   was tried first): the box's aspect-ratio height is not definite for a
+   flex child, so the shot fell back to the image's 900px natural width
+   and broke the card. Set `aspect-ratio` to the real file's pixel ratio
+   (store shots here are 900x1955).
+   ---------------------------------------------------------------------- */
+.app-card__shot {
+  width: min(200px, 100%);
+  aspect-ratio: 900 / 1955;
+  padding: 5px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--color-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 30px 60px -30px var(--shadow-color);
+}
+.app-card__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: calc(var(--radius-lg) - 5px);
+  background: #000;
+}
+
 /* ---- Sliceball abstract visual -----------------------------------------
    Pure CSS/SVG-free illustration of the core mechanic (a card stack
    holding a ball above a floor line) — no screenshots or product art

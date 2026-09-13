@@ -441,9 +441,17 @@ for any future grid that has a fixed-px minmax floor.
   only, not behind text) — put the game's abstract visual inside it,
   sized to fit (see the Sliceball scene for a working example at
   `width: min(220px, 100%)`).
-- No real screenshots/video for an unreleased game on this compact
-  homepage card — build an abstract CSS-only visual instead (no external
-  image/video files, no CDN). Give it its own class namespace, e.g.
+- **Shipped app: a real screenshot.** Since 2026-09-13 the Sliceball
+  card's visual is `.app-card__shot` — the `.showcase__video-card` glass
+  ring copied as-is, stretched to the 4:3 box's height with the image's
+  own `aspect-ratio` (store shots are 900x1955) so nothing crops — holding
+  one of the privacy-screened store screenshots already in
+  `sliceball/assets/showcase/` (`showcase-03-slicing.webp`, the action
+  shot). No new asset pipeline: reuse the gallery's webp files.
+- **Unreleased app: no real screenshots/video** on this compact card —
+  build an abstract CSS-only visual instead (no external image/video
+  files, no CDN) and swap to `.app-card__shot` at launch. The
+  `.sliceball-scene` CSS stays in `style.css` as the worked example. Give it its own class namespace, e.g.
   `.puzzlename-scene`, following the `.sliceball-scene` pattern below,
   and follow the reduced-motion pattern (static default, animation added
   only under `no-preference`). This is specifically about the small

@@ -194,9 +194,27 @@ a big stat number).
   accent-soft contrast note above), `--color-border-strong` border,
   `--color-text` text. Generic/neutral badge.
 - `.badge--coming-soon` — same shape, `--color-accent` text + border.
-  Use for any not-yet-released product. When Sliceball ships, swap this
-  card's badge for a plain `.badge` reading "Available now" (or drop the
-  badge entirely) rather than inventing a new class.
+  Use for any not-yet-released product or platform. Once a product
+  ships, swap to a plain `.badge` (or drop the badge) rather than
+  inventing a new class.
+
+**Launch state as of 2026-09-13 (Android live, iOS still in review):**
+the homepage `.app-card` carries a plain `.badge` reading "Out now" with
+`.app-card__platforms` reading "Android · iOS coming soon". The Sliceball
+hero's `.hero__actions` holds one `.btn-primary` linking straight to the
+Play listing (`https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball`,
+plain text "Get it on Google Play" — no external badge artwork, per the
+no-external-assets rule) beside a `.badge--coming-soon` reading
+"App Store · Coming soon". `.hero__actions` gained `align-items: center`
+for exactly this mix, since a 44px button and a 28px badge would
+otherwise stretch to the same height and the badge would read as a
+second button. **When iOS is approved:** replace that badge with a
+second link to the App Store listing as a `.btn-secondary` (one primary
+per view — Google Play keeps primary only because it shipped first; it
+is fine to make them both secondary), change the card's platforms text
+to "iOS · Android", and update the footer line and both meta
+descriptions, which currently read "out now on Android, coming soon to
+iOS" on every page.
 
 ## `.reveal` — scroll reveal utility
 
@@ -809,6 +827,12 @@ in full, because it changes what this clip is FOR:
    `sliceball/assets/showcase/_to_delete/` as
    `gameplay-iphone-placeholder-upgraded-skin-backup.mp4` (and matching
    `-poster.webp`), per the "never delete without approval" rule.
+
+**Android launch reflected on the site (2026-09-13):** every page's
+footer line, both meta descriptions, the homepage hero lead, the
+homepage card badge/platforms, and the Sliceball hero actions now say
+Android is out and iOS is coming soon — see the "Launch state" note
+under Badges for exactly what changes again when Apple approves.
 
 **Known pending / left behind, not yet resolved:**
 - ~~The primary iPhone showcase card still needs real default-state

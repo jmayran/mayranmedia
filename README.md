@@ -55,3 +55,17 @@ Pages redirect `jmayran.github.io` to the custom domain.
 
 `privacy@`, `support@`, and `hello@` are handled by iCloud+ Custom Email Domain,
 not by anything in this repository.
+
+## Verification
+
+Zero-build, so "test" means render and look. Serve locally on a random
+free port (`python3 -m http.server $(python3 -c 'import socket;s=socket.socket();s.bind(("",0));print(s.getsockname()[1])')`
+— 8765 is taken on the Mac mini) and check in **both** engines:
+
+- Chromium: headless Chrome `--screenshot`, or the in-app Browser pane
+  (measure phone-width overflow with `scrollWidth` vs `clientWidth`).
+- WebKit (Safari): `~/claude-workspace/scripts/webkit-shot` — a headless
+  `WKWebView` renderer that prints a JS result and saves a PNG. Safari has
+  laid out flex + `aspect-ratio` differently from Chrome before (the
+  featured card, 2026-09-13), so a Chrome-only check is not a check.
+

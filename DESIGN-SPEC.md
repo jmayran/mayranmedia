@@ -449,7 +449,13 @@ for any future grid that has a fixed-px minmax floor.
   very subtle accent-tinted radial wash (`--color-accent-soft`, decorative
   only, not behind text) — put the game's abstract visual inside it,
   sized to fit (see the Sliceball scene for a working example at
-  `width: min(220px, 100%)`).
+  `width: min(220px, 100%)`). It carries an explicit `width: 100%`
+  **for Safari**: without it WebKit resolves the 4:3 ratio from the
+  content height instead of the card width, so the box came out 666px
+  wide inside a 400px card and the centered screenshot was shoved right
+  and clipped (Jonathan's Safari screenshot, 2026-09-13). Chrome never
+  showed it. Test card layout changes in WebKit, not just Chrome — see
+  README → verification for the headless WebKit renderer.
 - **Shipped app: a real screenshot.** Since 2026-09-13 the Sliceball
   card's visual is `.app-card__shot` — the `.showcase__video-card` glass
   ring copied as-is, stretched to the 4:3 box's height with the image's

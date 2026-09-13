@@ -604,6 +604,15 @@ a.link-cta {
 }
 
 .app-card__visual {
+  /* `width: 100%` is load-bearing for Safari. Without it WebKit resolves
+     the aspect-ratio the other way round on this column-flex item —
+     width FROM the content height (shot + padding = 499px → 666px wide
+     inside a 400px card) — so the centered screenshot was shoved right
+     and clipped by the card's overflow (Jonathan, 2026-09-13, Safari
+     screenshot). An explicit width makes the ratio compute height from
+     width in every engine; the automatic min-height still lets a taller
+     shot grow the box. Chrome never showed the bug. */
+  width: 100%;
   aspect-ratio: 4 / 3;
   display: flex;
   align-items: center;

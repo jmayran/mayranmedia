@@ -444,6 +444,74 @@ a.link-cta {
   margin-top: var(--space-xl) !important;
 }
 
+/* ---- Storefront hero (homepage) --------------------------------------
+   `.hero--storefront` turns the hero into a two-column grid: copy on the
+   left, ONE featured `.app-card` on the right (`.hero__featured`). The
+   featured app is always the most recently shipped one — a new launch
+   replaces it and the old app stays in the #apps grid. Collapses to one
+   column (card under copy, centered) below 800px. The base `.hero__content`
+   rhythm (`> * + *` margins) is switched off on the grid children and
+   re-applied inside `.hero__copy` so the card column doesn't inherit a
+   stray top margin. See DESIGN-SPEC.md → "Storefront hero".
+   ---------------------------------------------------------------------- */
+.hero--storefront .hero__content {
+  max-width: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: var(--space-2xl);
+  align-items: center;
+}
+.hero--storefront .hero__content > * + * {
+  margin-top: 0;
+}
+.hero__copy > * + * {
+  margin-top: var(--space-md);
+}
+.hero__featured {
+  display: flex;
+  justify-content: flex-end;
+}
+.hero__featured .app-card {
+  width: min(400px, 100%);
+}
+@media (max-width: 800px) {
+  .hero--storefront .hero__content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero__featured {
+    justify-content: center;
+  }
+}
+
+/* ---- Help strip (homepage) ----------------------------------------------
+   A slim band between the hero and the apps grid: one sentence plus the
+   Support / Privacy hub links and the studio email, so help is reachable
+   without scrolling to the footer. Hairline top+bottom, no fill — it is a
+   divider with links, not a section. Links are real `a.link-cta`s (44px
+   targets). `.help-strip__links` is a `ul[class]`, so the reset already
+   strips its bullets.
+   ---------------------------------------------------------------------- */
+.help-strip {
+  border-block: 1px solid var(--color-border);
+  padding-block: var(--space-lg);
+}
+.help-strip .container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md) var(--space-2xl);
+}
+.help-strip p {
+  margin: 0;
+}
+.help-strip__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  margin: 0;
+}
+
 /* Progressive-enhancement scroll parallax on the hero — the one flourish
    beyond the standard .reveal fade. Guarded by @supports AND reduced
    motion, and purely decorative: nothing depends on it running.
@@ -487,12 +555,12 @@ a.link-cta {
   }
 }
 
-/* ---- Games grid & app card --------------------------------------------
-   `.app-card` is the reusable product-card component for the "Our Games"
-   grid. It is built and tested with exactly one card today (Sliceball)
-   but the grid and card are written to scale to many — adding a second
-   game later is just another `.app-card` inside `.games-grid`, no
-   redesign. See DESIGN-SPEC.md for the full markup contract.
+/* ---- Apps grid & app card ----------------------------------------------
+   `.app-card` is the reusable product-card component for the "All apps"
+   grid (and the homepage hero's single featured card). The class name
+   `.games-grid` predates the studio's "apps, not just games" wording and
+   is kept for stability. Adding an app is just another `.app-card` inside
+   `.games-grid`, no redesign. See DESIGN-SPEC.md for the markup contract.
    ------------------------------------------------------------------------ */
 .games-grid {
   display: grid;

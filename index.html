@@ -16,8 +16,8 @@
   */
   document.documentElement.classList.add("js");
 </script>
-<title>Mayran Media — Indie Mobile Games</title>
-<meta name="description" content="Mayran Media is an indie mobile game studio. Sliceball, our first game, is out now on Android and coming soon to iOS.">
+<title>Mayran Media — Small apps, built with care</title>
+<meta name="description" content="Mayran Media is a one-person mobile app studio. Sliceball, our first app, is out now on Android and coming soon to iOS. Support and privacy for every app, in one place.">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%2314663a'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="tokens.css">
@@ -31,8 +31,9 @@
     <a class="wordmark" href="#top">Mayran <span class="accent">Media</span></a>
     <nav class="site-nav" aria-label="Primary">
       <ul>
-        <li><a href="#games">Games</a></li>
-        <li><a href="#story">Story</a></li>
+        <li><a href="#apps">Apps</a></li>
+        <li><a href="support/">Support</a></li>
+        <li><a href="privacy/">Privacy</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
@@ -41,40 +42,92 @@
 
 <main id="main">
 
-  <!-- ============================= HERO ============================= -->
-  <section class="hero" id="top">
+  <!-- ====================== HERO (storefront) ======================
+       The hero features ONE app: the most recently shipped one. When a
+       new app ships it replaces the card and the primary button here,
+       and the previous app stays listed in the #apps grid below. See
+       DESIGN-SPEC.md → "Storefront hero". -->
+  <section class="hero hero--storefront" id="top">
     <div class="container">
       <div class="hero__content reveal-group">
-        <p class="eyebrow reveal">Indie mobile games</p>
-        <h1 class="reveal">Small games.<br>Built with care.</h1>
-        <p class="hero__lead text-body-lg reveal">
-          Mayran Media is a solo mobile-game studio making focused, well-crafted
-          games worth a few minutes of your day — starting with Sliceball,
-          out now on Google Play and coming soon to iOS.
-        </p>
-        <div class="hero__actions reveal">
-          <a class="btn btn-primary" href="#games">See our games</a>
-          <a class="btn btn-secondary" href="#contact">Get in touch</a>
+        <div class="hero__copy">
+          <p class="eyebrow reveal">Mayran Media</p>
+          <h1 class="reveal">Small apps.<br>Built with care.</h1>
+          <p class="hero__lead text-body-lg reveal">
+            A one-person studio making focused mobile apps worth a few
+            minutes of your day. Support and privacy for every app live
+            right here.
+          </p>
+          <div class="hero__actions reveal">
+            <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball" rel="noopener">Get Sliceball on Google Play</a>
+            <a class="btn btn-secondary" href="#help">Get help</a>
+          </div>
+        </div>
+        <div class="hero__featured reveal">
+          <article class="app-card">
+          <div class="app-card__visual">
+            <div class="sliceball-scene" aria-hidden="true">
+              <div class="sliceball-scene__phone">
+                <span class="sliceball-scene__island"></span>
+                <div class="sliceball-scene__screen">
+                  <span class="sliceball-scene__ball"></span>
+                  <div class="sliceball-scene__stack">
+                    <span class="sliceball-scene__card"></span>
+                    <span class="sliceball-scene__card"></span>
+                    <span class="sliceball-scene__card"></span>
+                  </div>
+                  <span class="sliceball-scene__floor"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="app-card__body">
+            <div class="app-card__meta">
+              <span class="badge">Game</span>
+              <span class="app-card__platforms">Google Play · App Store soon</span>
+            </div>
+            <h3 class="app-card__title">
+              <a class="app-card__link" href="sliceball/">Sliceball</a>
+            </h3>
+            <p class="app-card__description">
+              Time your slices, drop the ball, clear the level. A quick timing
+              game for a spare minute.
+            </p>
+            <div class="app-card__footer">
+              <span class="link-cta" aria-hidden="true">Learn more <span class="arrow">→</span></span>
+            </div>
+          </div>
+        </article>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============================ GAMES ============================== -->
-  <section class="section" id="games">
+  <!-- ============================ HELP STRIP =========================== -->
+  <section class="help-strip" id="help" aria-label="Help">
+    <div class="container">
+      <p><strong>Need a hand with an app?</strong> Support, privacy policies and a real person to email.</p>
+      <ul class="help-strip__links">
+        <li><a class="link-cta" href="support/">Support <span class="arrow">→</span></a></li>
+        <li><a class="link-cta" href="privacy/">Privacy <span class="arrow">→</span></a></li>
+        <li><a class="link-cta" href="mailto:hello@mayranmedia.com">hello@<wbr>mayranmedia.com</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ ALL APPS ============================= -->
+  <section class="section" id="apps">
     <div class="container">
       <div class="section-header reveal">
-        <p class="eyebrow">Our games</p>
-        <h2>One game so far. More on the way.</h2>
-        <p class="text-body-lg">Every Mayran Media game gets the same care, and a home right here.</p>
+        <p class="eyebrow">All apps</p>
+        <h2>One so far. More on the way.</h2>
+        <p class="text-body-lg">Every Mayran Media app gets the same care, and a home right here.</p>
       </div>
 
       <div class="games-grid reveal">
         <!-- .app-card: reusable product-card component. Copy this whole
-             <article> for each additional game — see DESIGN-SPEC.md.
-             Note: `.reveal` lives on `.games-grid` (the section-level
-             group), not on individual `.app-card`s — see the restraint
-             rule in DESIGN-SPEC.md. -->
+             <article> for each additional app — see DESIGN-SPEC.md.
+             `.reveal` lives on `.games-grid`, not on individual cards. -->
         <article class="app-card">
           <div class="app-card__visual">
             <div class="sliceball-scene" aria-hidden="true">
@@ -94,45 +147,43 @@
           </div>
           <div class="app-card__body">
             <div class="app-card__meta">
-              <span class="badge">Out now</span>
-              <span class="app-card__platforms">Android · iOS coming soon</span>
+              <span class="badge">Game</span>
+              <span class="app-card__platforms">Google Play · App Store soon</span>
             </div>
             <h3 class="app-card__title">
               <a class="app-card__link" href="sliceball/">Sliceball</a>
             </h3>
             <p class="app-card__description">
-              Time your slices, drop the ball, clear the level. Stacks of
-              cards hold the ball above the danger — slice at the right
-              moment and it falls clean.
+              Time your slices, drop the ball, clear the level. A quick timing
+              game for a spare minute.
             </p>
             <div class="app-card__footer">
               <span class="link-cta" aria-hidden="true">Learn more <span class="arrow">→</span></span>
             </div>
           </div>
         </article>
-        <!-- Next game goes here as another <article class="app-card"> —
-             `.reveal` lives on `.games-grid` above, not on individual
-             cards; don't add it back here. See DESIGN-SPEC.md. -->
+        <!-- Next app goes here as another <article class="app-card">. -->
       </div>
     </div>
   </section>
 
-  <!-- ============================ STORY =============================== -->
-  <section class="section" id="story">
+  <!-- ============================= ABOUT =============================== -->
+  <section class="section" id="about">
     <div class="container">
       <div class="section-header reveal">
-        <p class="eyebrow">Story</p>
-        <h2>Made by one person, for players who like things simple.</h2>
+        <p class="eyebrow">About</p>
+        <h2>Made by one person, for people who like things simple.</h2>
       </div>
       <div class="measure reveal" style="margin-inline: auto;">
         <p class="text-body-lg">
-          Mayran Media is a solo indie studio. No committees, no bloat, no dark
-          patterns — just small mobile games, built one at a time, and shipped
-          when they're actually good.
+          Mayran Media is a one-person studio. No committees, no dark
+          patterns, no clutter — just small mobile apps, built one at a
+          time and shipped when they're actually good.
         </p>
         <p class="text-body-lg" style="margin-top: var(--space-md);">
-          Sliceball is the first release. It won't be the last — this page is
-          built to grow alongside every game that follows.
+          Sliceball is the first release. It won't be the last — this site
+          is built to grow alongside every app that follows, with support
+          and a privacy policy for each one.
         </p>
       </div>
     </div>
@@ -151,7 +202,7 @@
           <a href="mailto:hello@mayranmedia.com">hello@<wbr>mayranmedia.com</a>
         </div>
         <div class="contact-card">
-          <p class="contact-card__label">Player support</p>
+          <p class="contact-card__label">App support</p>
           <a href="mailto:support@mayranmedia.com">support@<wbr>mayranmedia.com</a>
         </div>
         <div class="contact-card">
@@ -169,26 +220,24 @@
     <div class="footer-grid">
       <div class="footer-col">
         <p class="wordmark wordmark--footer">Mayran <span class="accent">Media</span></p>
-        <p class="text-small text-secondary">Indie mobile games.</p>
+        <p class="text-small text-secondary">Small apps, built with care.</p>
       </div>
       <div class="footer-col">
-        <h3>Studio</h3>
+        <h3>Apps</h3>
         <ul>
-          <li><a href="#top">Home</a></li>
-          <li><a href="#games">Games</a></li>
-          <li><a href="#story">Story</a></li>
+          <li><a href="sliceball/">Sliceball</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Sliceball</h3>
+        <h3>Help</h3>
         <ul>
-          <li><a href="sliceball/">Overview</a></li>
-          <li><a href="sliceball/support/">Support</a></li>
-          <li><a href="sliceball/privacy/">Privacy</a></li>
+          <li><a href="support/">Support</a></li>
+          <li><a href="privacy/">Privacy</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Contact</h3>
+        <h3>Email</h3>
         <ul>
           <li><a href="mailto:hello@mayranmedia.com">hello@<wbr>mayranmedia.com</a></li>
           <li><a href="mailto:support@mayranmedia.com">support@<wbr>mayranmedia.com</a></li>

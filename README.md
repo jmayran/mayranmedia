@@ -10,10 +10,12 @@ or build assets; Sliceball lives in its own private Unity project.
 
 | Path | Purpose |
 | --- | --- |
-| `index.html` | Studio landing page |
+| `index.html` | Studio landing page — featured (newest) app in the hero, then every app |
 | `tokens.css` | Shared design tokens (colors, type, spacing) used by every page |
 | `style.css` | Shared component styles, built on `tokens.css` |
 | `script.js` | Shared scroll-reveal / video behavior, loaded with `defer` |
+| `support/` | Site-level support hub — one card per app, linking to that app's own support page |
+| `privacy/` | Site-level privacy hub — one card per app, linking to that app's own policy |
 | `sliceball/` | Sliceball product page and its `assets/` (screenshots, gameplay clips) |
 | `sliceball/privacy/` | Privacy policy — **required** by the App Store and Google Play |
 | `sliceball/support/` | Support page — the App Store **requires** a support URL to submit |

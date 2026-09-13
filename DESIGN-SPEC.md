@@ -321,6 +321,58 @@ a fresh `IntersectionObserver` on the page: if it also stays silent, the
 tab is the problem. Real verification is headless Chromium (Playwright)
 against a clone of the repo.
 
+## Storefront hero (`.hero--storefront`, homepage only)
+
+Chosen 2026-09-13 from three rendered directions (a centered "quiet
+catalog", this "storefront", and a "help-first" split with an app
+finder panel). Jonathan picked storefront so the newest app is the first
+thing a visitor sees.
+
+**The hero features exactly ONE app: the most recently shipped one.**
+`.hero__content` becomes a two-column grid — `.hero__copy` (eyebrow, H1,
+lead, `.hero__actions`) on the left, `.hero__featured` holding a single
+`.app-card` on the right — collapsing to one column under 800px. The
+primary button is that app's direct store link ("Get Sliceball on Google
+Play"); the secondary is "Get help" → `#help`. **When a new app ships,
+replace the card and the primary button with the new app, and leave the
+previous app's card in the `#apps` grid** — never put two apps in the
+hero. The same card markup is deliberately repeated in the grid: the hero
+is a spotlight, the grid is the complete catalog.
+
+Wording is "apps", not "games", everywhere the studio is described
+(Jonathan's call, 2026-09-13, so a future non-game fits without a copy
+pass). The `.games-grid` class name is kept for stability. Each card's
+`.badge` is now a **category label** ("Game" today; "Utility" etc. later)
+rather than a launch-state badge — launch state lives in
+`.app-card__platforms` ("Google Play · App Store soon").
+
+## Help strip (`.help-strip`, homepage only)
+
+A slim hairline-bordered band right under the hero: one sentence
+("Need a hand with an app?") and `.help-strip__links`, a `ul[class]` of
+real `a.link-cta`s — Support hub, Privacy hub, `hello@`. It exists so
+help is reachable above the fold without turning the homepage into a
+help desk. Not a `.section` (no `--space-section` padding); don't give
+it a fill.
+
+## Hub pages (`/support/`, `/privacy/`)
+
+Site-level index pages following the "hybrid" model Jonathan approved
+2026-09-13 (what multi-app publishers do, minus a shared policy): each
+hub has an intro, a `.contact-card` "Need a person?" callout with the
+matching studio email, and a **"By app"** `.contact-grid` with one
+`.contact-card` per app linking to that app's own detailed page. The
+privacy hub also carries one `.legal-content` block stating what is true
+of every app (no accounts, nothing sent to Mayran Media) — keep that
+paragraph truthful when a new app changes it. **Per-app pages
+(`sliceball/support/`, `sliceball/privacy/`) stay exactly where they
+are** — those URLs are filed with both stores and GitHub Pages cannot
+redirect. Adding an app = one card on each hub, one row in the footer's
+Apps column, one `.app-card` in the grid, and (if newest) the hero swap.
+
+Every hub reuses existing components only (`.contact-card`,
+`.contact-grid`, `.legal-content`, `.measure`); no hub-specific CSS.
+
 ## `.app-card` — reusable product-card component
 
 The card for the "Our Games" grid. Built and tested with exactly one
@@ -618,7 +670,9 @@ gradient recipe.
 
 - `.site-header` — sticky, translucent (`--color-bg-overlay` +
   `backdrop-filter: blur`), bottom hairline border. Contains `.wordmark`
-  (logo, links to `#top`/home) and `.site-nav` (`<ul>` of anchor links).
+  (logo, links to `#top`/home) and `.site-nav` (`<ul>` of anchor links —
+  homepage: Apps · Support · Privacy · Contact; hubs: Home · Apps · the
+  other hub · Contact; app pages keep their own per-app nav).
   Reuse this exact block verbatim on every future page, adjusting the
   `.wordmark` `href` to point at the site root (e.g. `../` from a
   sub-page) and the nav links to match what that page actually has.
@@ -626,7 +680,10 @@ gradient recipe.
   `--color-text`, "Media" in `--color-accent`. This exact two-span pattern
   is the only correct way to render the studio name; never recolor both
   words the same or invert which word is the accent.
-- `.site-footer` — `.footer-grid` (explicit `repeat(4, minmax(0,1fr))`
+- `.site-footer` — columns are now (2026-09-13) wordmark · **Apps** (one
+  row per app) · **Help** (Support hub, Privacy hub, Contact) · **Email**
+  (the three addresses), identical on every page; the old per-app
+  "Sliceball" column is gone. `.footer-grid` (explicit `repeat(4, minmax(0,1fr))`
   equal-width columns — not `auto-fit`, which sized columns unevenly
   depending on leftover space and read as lopsided — collapsing to 2
   columns at 700px and 1 at 420px; `.footer-col` each with an `<h3>`
@@ -827,6 +884,12 @@ in full, because it changes what this clip is FOR:
    `sliceball/assets/showcase/_to_delete/` as
    `gameplay-iphone-placeholder-upgraded-skin-backup.mp4` (and matching
    `-poster.webp`), per the "never delete without approval" rule.
+
+**Homepage rebuilt as a multi-app hub (2026-09-13):** storefront hero with
+one featured app, help strip, "All apps" grid, About, Contact; new
+`/support/` and `/privacy/` hub pages; shared four-column footer on all
+six pages; "apps" wording site-wide. See "Storefront hero", "Help strip"
+and "Hub pages" above.
 
 **Android launch reflected on the site (2026-09-13):** every page's
 footer line, both meta descriptions, the homepage hero lead, the

@@ -267,6 +267,11 @@ p {
   font-size: 1.05rem;
 }
 .site-nav ul {
+  /* This <ul> has no class, so the `ul[class]` reset above skips it and
+     the browser's default disc bullets + indent showed in the header. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   gap: var(--space-lg);
   flex-wrap: wrap;
@@ -434,6 +439,7 @@ a.link-cta {
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center; /* a .btn (44px) and a .badge (28px) can share this row */
   gap: var(--space-md);
   margin-top: var(--space-xl) !important;
 }

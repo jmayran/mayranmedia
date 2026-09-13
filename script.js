@@ -18,7 +18,7 @@
    2. Gates the Sliceball showcase's autoplaying gameplay video(s) behind
       `prefers-reduced-motion` and wires up each one's own pause/play
       toggle button. See that block below for why. There are two
-      independent video/toggle pairs on the page now (iPhone + iPad
+      independent video/toggle pairs on the page now (two clips
       cards, side by side) -- this loops over however many
       `.showcase__video-card`s it finds, so a third device card someday
       needs no JS change at all.
@@ -105,7 +105,8 @@
    any auto-starting motion lasting more than 5 seconds) — that's the
    `.showcase__video-toggle` button, wired up here.
 
-   The showcase now has two independent device cards (iPhone + iPad),
+   The showcase now has two independent, deliberately unlabeled clips
+   (no device names — Jonathan wants it generic across phones/tablets),
    each its own `.showcase__video-card` containing one `<video
    class="showcase__video">` and one `.showcase__video-toggle` sibling —
    this loops over every `.showcase__video-card` and wires each pair up
@@ -134,8 +135,8 @@
         (isPlaying ? "Pause " : "Play ") + toggle.dataset.label + " gameplay video"
       );
     }
-    // Remember this toggle's own device name (from its initial aria-label,
-    // e.g. "Pause iPhone gameplay video" -> "iPhone") so setToggleState can
+    // Remember this toggle's own distinguishing word (from its initial
+    // aria-label, e.g. "Pause first gameplay video" -> "first") so setToggleState can
     // rebuild an accurate label after every play/pause without hardcoding
     // "gameplay" text per-card here.
     var initialLabel = toggle.getAttribute("aria-label") || "";

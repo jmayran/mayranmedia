@@ -555,7 +555,6 @@ label markup):
         <span class="showcase__video-toggle-icon showcase__video-toggle-icon--play" aria-hidden="true"></span>
       </button>
     </div>
-    <p class="showcase__device-label">iPhone</p>
   </div>
   <!-- a second .showcase__device for iPad sits alongside this one -->
 </div>
@@ -828,7 +827,7 @@ this spec originally described (see `.showcase`'s history note above)
 **Two-device showcase, built:** `.showcase__stage` now holds two
 `.showcase__device` cards side by side (iPhone + iPad), each with its
 own labeled `.showcase__video-card` — see `.showcase`'s markup example
-above and `.showcase__stage`/`.showcase__device`/`.showcase__device-label`
+above and `.showcase__stage`/`.showcase__device`
 in `style.css`. The iPad card (`gameplay-ipad.mp4`,
 `aspect-ratio: 720/960`) is a fresh iPad Simulator recording, genuinely
 at default state (`CASH $0`, `Level 1`, no shop purchases) — this is

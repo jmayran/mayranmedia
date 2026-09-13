@@ -929,13 +929,6 @@ a.link-cta {
   align-items: center;
   gap: var(--space-sm);
 }
-.showcase__device-label {
-  font-size: var(--text-small);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-text-secondary);
-}
 .showcase__video-card {
   /* Minimal glass edge -- the direction Jonathan picked from three
      options mocked up side by side (see the section comment above and

@@ -204,7 +204,8 @@ Add `class="reveal"` to any element that should fade + slide up
 (`translateY(var(--reveal-distance))` → `none`, opacity 0 → 1) the first
 time it scrolls into view. `script.js` observes every `.reveal` element on
 the page with a single shared `IntersectionObserver` and adds
-`.is-visible` once, permanently, the first time each one is ≥15% visible.
+`.is-visible` once, permanently, as soon as any pixel of it comes within
+300px of the bottom of the viewport (see the timing note below).
 
 **Group + stagger:** wrap a set of sibling `.reveal` elements in a parent
 with `class="reveal-group"` to stagger their transition-delay (90ms steps,
@@ -266,6 +267,41 @@ whatever media query is also relevant). A purely CSS-driven animation
 (like the Sliceball scene below, which needs no JS at all — the
 `@keyframes` themselves drive every visual state) only needs the
 motion-based media query, no `html.js` gate.
+
+**Timing (retuned 2026-09-13):** the first cut observed with
+`threshold: 0.15` and `rootMargin: "0px 0px -40px 0px"`, fading over
+`--duration-slow` (800ms). That combination meant a section had to be
+15% inside an already-shrunk viewport before its fade even *started*,
+then took most of a second to finish — so at normal scrolling speed the
+reader arrived at a section before it had faded in and saw a blank or
+ghosted band. Three changes, all in the direction of "the content is
+there before you get to it":
+
+- `script.js` observes with `threshold: 0` and a **positive** bottom
+  `rootMargin` of `300px`, so the fade starts ~300px before the section
+  scrolls into view.
+- `tokens.css` adds `--duration-reveal: 350ms` (0ms under reduced
+  motion) and `.reveal` transitions on that instead of
+  `--duration-slow`. 800ms stays reserved for the ambient glows and
+  other things that are meant to feel slow; a scroll reveal should
+  finish before you can notice it.
+- `script.js` also runs a `revealInView()` safety net immediately and
+  again on `window.load`: anything already at or near the viewport gets
+  `.is-visible` directly, without waiting on an observer callback. The
+  `html.js` gate above covers "JS never ran"; this covers the other
+  failure — JS ran, so content is hidden, but the observer callback
+  never arrives (a restored scroll position, a `#hash` deep link, a tab
+  that loaded while hidden). Neither case can leave a section
+  permanently invisible now.
+
+**Verifying this in an automated browser is a trap.** Both Claude in
+Chrome and the desktop browser pane report `innerHeight: 0`, so nothing
+can ever intersect the viewport, the observer never fires, and every
+`.reveal` measures at `opacity: 0` — indistinguishable from a real bug.
+Two sessions chased that. If a reveal looks broken in automation, create
+a fresh `IntersectionObserver` on the page: if it also stays silent, the
+tab is the problem. Real verification is headless Chromium (Playwright)
+against a clone of the repo.
 
 ## `.app-card` — reusable product-card component
 

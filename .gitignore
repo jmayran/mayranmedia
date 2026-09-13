@@ -12,3 +12,7 @@ node_modules
 .DS_Store
 Thumbs.db
 *.swp
+
+# Side-by-side backups taken before an edit (script.js.bak etc.). Same
+# reasoning as _to_delete/ above: kept locally, never committed.
+*.bak

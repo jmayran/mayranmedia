@@ -733,9 +733,9 @@ a.link-cta {
    on every <img>/<video> inside and nothing is ever cropped:
      phone gameplay clip  444 x 960   (assets/showcase/gameplay-iphone.*)
      tablet gameplay clip 720 x 960   (assets/showcase/gameplay-ipad.*)
-     screenshots          900 x 1883  (assets/showcase/screen-*.webp —
+     screenshots          900 x 1843  (assets/showcase/screen-*.webp —
                           the store shots with the island cropped off
-                          the top, 72px; the originals are untouched)
+                          the top, 112px -- the black pill spans rows 30-104 in every store shot, and an earlier 72px cut left its bottom third showing; the originals live in _to_delete/)
    Radii: phone bezel 3.2% / corner 17.6%; tablet bezel 3.6% / corner 6%
    (a real tablet's corners are much tighter than a phone's). The screen
    radius is corner minus bezel so the two curves stay concentric.

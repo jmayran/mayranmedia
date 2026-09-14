@@ -454,7 +454,7 @@ for any future grid that has a fixed-px minmax floor.
     <!-- unreleased: a game-specific abstract visual, e.g. .sliceball-scene
          shipped:    <div class="device device--phone app-card__device">
                        <img class="device__screen" src="…/screen-03-slicing.webp"
-                            alt="…" width="900" height="1883" decoding="async">
+                            alt="…" width="900" height="1843" decoding="async">
                      </div> -->
   </div>
   <div class="app-card__body">
@@ -505,7 +505,7 @@ for any future grid that has a fixed-px minmax floor.
   — nothing crops, and nothing is sized by height (a height-based size
   is not definite for a flex child and fell back to the image's 900px
   natural width once already). **Use the island-free crops**
-  (`sliceball/assets/showcase/screen-*.webp`, 900x1883 — the store shots
+  (`sliceball/assets/showcase/screen-*.webp`, 900x1843 — the store shots
   with the iPhone island cropped off the top), never the raw
   `showcase-*.webp` store shots: the frame is deliberately generic (no
   island, notch, buttons or camera housing, per Apple's marketing
@@ -627,7 +627,7 @@ island"). Size ONLY via `--device-w` on a page-specific wrapper rule
 The screen's height comes from the media's own `width`/`height`
 attributes (`height: auto`), so every `<img>`/`<video>` inside MUST carry
 its real pixel size (phone clip 444×960, tablet clip 720×960,
-screenshots 900×1883) and nothing is ever cropped — verified 2026-09-13
+screenshots 900×1843) and nothing is ever cropped — verified 2026-09-13
 in WebKit and Chrome at 1280 and 375: every `.device__screen`'s rendered
 aspect equals its natural aspect, every `.device` is centred in its
 parent to the pixel, no horizontal overflow, overlap measures exactly
@@ -691,7 +691,7 @@ ships** (an `ffmpeg` contact sheet at 1–4fps) for Game Center
 "Signed in as <name>" toasts, notification banners, or a real name —
 this caught two separate exposures on this page (see "Current status").
 Screenshots are the `StoreAssets/` store shots resized to 900px wide,
-`.webp` quality 82, with the island cropped off the top (72px) as
+`.webp` quality 82, with the island cropped off the top (112px; the pill occupies rows 30-104, and a first pass at 72px left its bottom third visible, which Jonathan caught on the live site) as
 `screen-NN-name.webp`; never generate placeholder/fake screenshots.
 
 ## Ambient background glow (`.hero::before`)

@@ -575,25 +575,19 @@ The page is, top to bottom:
    `--device-w: min(330px, 70vw)`. Sibling, not child, because the
    `hero-parallax` fade targets `.hero__content` on non-storefront heroes
    and must never dim the footage (the same rule the homepage's featured
-   card follows). The figure hangs `--hero-overlap` (200px; 140px at
-   800px and below) down over the next section via a negative bottom
-   margin, `position: relative; z-index: 1`; `.hero--story` is
-   `overflow: visible` so the phone is not clipped at the hero's edge
-   (the base `.hero` clips, but its glow never overflows anyway).
-2. **`.story-tablet`** (`#tablet`) — the `--color-bg-elevated` band the
-   phone hangs into. Its top padding is `var(--hero-overlap) +
-   var(--space-section)`, so the phone's overlap and this padding are
-   the SAME custom property declared on both siblings (custom properties
-   only inherit downwards) — change one and the other follows. Two-column
-   grid (copy `1fr` | tablet `1.1fr`), copy-first single column and
-   centred at 800px and below. Copy: eyebrow "Bigger screen", H2 "Made
-   for the tablet on the couch, too.", one `.text-body-lg` line, and
-   `.story-tablet__pills` (plain `.badge` "Android tablets · Out now",
-   `.badge--coming-soon` "iPad · Coming soon"). Tablet:
-   `.device-figure.story-tablet__device` > `.device--tablet` at
-   `--device-w: min(520px, 100%)` (percentage, not vw — at 1280 the grid
-   column is ~500px and a fixed 520px spilled into the gutter) with its
-   own pause chip.
+   card follows). The figure sits entirely inside the hero on the base
+   `.hero` background (no overlap into the next section — see the
+   2026-09-13 note below).
+2. **`.story-tablet`** (`#tablet`) — the `--color-bg-elevated` band below
+   the hero, `padding-block: var(--space-section)`. Two-column grid (copy
+   `1fr` | tablet `1.1fr`), copy-first single column and centred at 800px
+   and below. Copy: eyebrow "Bigger screen", H2 "Made for the tablet on
+   the couch, too.", one `.text-body-lg` line, and `.story-tablet__pills`
+   (plain `.badge` "Android tablets · Out now", `.badge--coming-soon`
+   "iPad · Coming soon"). Tablet: `.device-figure.story-tablet__device` >
+   `.device--tablet` at `--device-w: min(520px, 100%)` (percentage, not
+   vw — at 1280 the grid column is ~500px and a fixed 520px spilled into
+   the gutter) with its own pause chip.
 3. **`.feature-rows`** (`#features`, white) — three `.feature-row`
    articles, each `.feature-row__copy` (`.feature-row__index` "01"/"02"/
    "03" in the old step-card counter style: `--text-small`, 700,
@@ -630,8 +624,20 @@ its real pixel size (phone clip 444×960, tablet clip 720×960,
 screenshots 900×1843) and nothing is ever cropped — verified 2026-09-13
 in WebKit and Chrome at 1280 and 375: every `.device__screen`'s rendered
 aspect equals its natural aspect, every `.device` is centred in its
-parent to the pixel, no horizontal overflow, overlap measures exactly
-200/140px.
+parent to the pixel, no horizontal overflow.
+
+**Overlap removed (2026-09-13, later the same day).** The hero phone
+originally hung `--hero-overlap` (200px; 140px on phones) down into the
+grey `.story-tablet` band via a negative bottom margin — see the history
+note below for why. Jonathan flagged it live: with the phone straddling
+the boundary, it was the only device on the page sitting on a mixed
+white/grey backdrop instead of one flat color like the tablet (all grey)
+and the three feature-row screenshots (all white). Fix: dropped
+`--hero-overlap` entirely — `.hero__device` is a plain `margin-top`, in
+flow, no negative margin, no `z-index`; `.story-tablet` went back to a
+normal `padding-block: var(--space-section)`. The phone now sits fully
+inside the hero's white background with a normal section gap before the
+grey band starts. Re-verified in WebKit and Chrome at 1280 and 375.
 
 **Pause chip (`.video-toggle`), and why it is OUTSIDE the screen.** Each
 looping clip still needs a visible stop (WCAG 2.2.2), but the game's own

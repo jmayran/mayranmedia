@@ -1059,29 +1059,15 @@ a.link-cta {
 }
 
 /* ---- Story hero (Sliceball page) ---------------------------------------
-   `.hero--story` centres the base hero and lets ONE `.device-figure`
-   (`.hero__device`) hang down out of the hero over the grey band below.
-   The overlap is a shared custom property, `--hero-overlap`, consumed by
-   two rules that must stay in step: the figure's negative bottom margin
-   here, and `.story-tablet`'s top padding below (which reserves the same
-   space again so the tablet copy starts below the phone, not under it).
-   The two sections are siblings, so the property is declared on BOTH
-   (custom properties only inherit downwards) - 200px on desktop, 140px
-   at 800px and below.
-
-   The base `.hero` clips (`overflow: hidden`) to contain its glow;
-   this variant must NOT clip, or the hanging phone is cut off at the
-   hero's bottom edge. The glow (`.hero::before`, `inset: 0`) never
-   overflows anyway, so nothing is lost. `position: relative; z-index: 1`
-   on the figure paints it above the following section's background.
+   `.hero--story` centres the base hero; the phone sits entirely inside
+   it on the plain hero background, same as the tablet below sits
+   entirely inside its own grey band. (Direction C originally let the
+   phone hang down over the grey band below it, straddling both
+   backgrounds. Jonathan flagged that seam 2026-09-13 -- it made the
+   hero phone the only device on the page with a mixed white/grey
+   backdrop instead of one flat color -- so the overlap was removed.)
    ---------------------------------------------------------------------- */
-.hero--story,
-.story-tablet {
-  --hero-overlap: 200px;
-}
 .hero--story {
-  overflow: visible;
-  padding-bottom: 0;
   text-align: center;
 }
 .hero--story .hero__content {
@@ -1101,26 +1087,21 @@ a.link-cta {
   margin-top: var(--space-xl);
 }
 .hero__device {
-  position: relative;
-  z-index: 1;
   margin-top: var(--space-2xl);
-  margin-bottom: calc(-1 * var(--hero-overlap));
 }
 .hero__device .device--phone {
   --device-w: min(330px, 70vw);
 }
 
 /* ---- Tablet band (Sliceball page) --------------------------------------
-   The `--color-bg-elevated` section the hero phone hangs into. Its top
-   padding = the overlap the phone occupies + one normal section gap, so
-   the grid below starts clear of the phone. Two columns (copy | tablet)
-   on desktop; copy-first, centred, single column at 800px and below -
-   the same breakpoint the storefront hero collapses at.
+   The `--color-bg-elevated` section below the hero. Two columns
+   (copy | tablet) on desktop; copy-first, centred, single column at
+   800px and below - the same breakpoint the storefront hero collapses
+   at.
    ---------------------------------------------------------------------- */
 .story-tablet {
   background: var(--color-bg-elevated);
-  padding-top: calc(var(--hero-overlap) + var(--space-section));
-  padding-bottom: var(--space-section);
+  padding-block: var(--space-section);
 }
 .story-tablet__grid {
   display: grid;
@@ -1191,10 +1172,6 @@ a.link-cta {
 }
 
 @media (max-width: 800px) {
-  .hero--story,
-  .story-tablet {
-    --hero-overlap: 140px;
-  }
   .story-tablet__grid {
     grid-template-columns: minmax(0, 1fr);
     text-align: center;

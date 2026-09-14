@@ -17,7 +17,7 @@
   document.documentElement.classList.add("js");
 </script>
 <title>Mayran Media — Small apps, built with care</title>
-<meta name="description" content="Mayran Media is a one-person mobile app studio. Sliceball, our first app, is out now on Android and coming soon to iOS. Support and privacy for every app, in one place.">
+<meta name="description" content="Mayran Media is a one-person mobile app studio. Skim is in development; Sliceball is out now on Android and coming soon to iOS. Support and privacy for every app, in one place.">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%2314663a'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="tokens.css">
@@ -31,7 +31,7 @@
     <a class="wordmark" href="#top">Mayran <span class="accent">Media</span></a>
     <nav class="site-nav" aria-label="Primary">
       <ul>
-        <li><a href="#top">Apps</a></li>
+        <li><a href="#apps">Apps</a></li>
         <li><a href="support/">Support</a></li>
         <li><a href="privacy/">Privacy</a></li>
         <li><a href="#contact">Contact</a></li>
@@ -60,30 +60,38 @@
           </p>
           <div class="store-block reveal">
             <div class="store-block__badges">
-              <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball" rel="noopener"><img src="assets/store/google-play-badge.png" alt="Get it on Google Play" width="646" height="250"></a>
+              <span class="badge badge--coming-soon">In development</span>
               <a class="btn btn-secondary" href="#help">Get help</a>
             </div>
-            <a class="store-block__qr" href="https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball" rel="noopener"><img src="assets/store/qr-google-play.svg" alt="QR code: Sliceball on Google Play" width="164" height="164"><span>Scan to open it on your phone</span></a>
           </div>
         </div>
         <div class="hero__featured reveal">
           <article class="app-card">
           <div class="app-card__visual">
-            <div class="device device--phone app-card__device">
-              <img class="device__screen" src="sliceball/assets/showcase/screen-03-slicing.webp" alt="Sliceball: the ball dropping onto a stack of cards, mid-slice" width="900" height="1843" decoding="async">
+            <div class="skim-scene">
+              <div class="skim-scene__phone">
+                <div class="skim-scene__island" aria-hidden="true"></div>
+                <div class="skim-scene__screen">
+                  <div class="skim-scene__water" aria-hidden="true"></div>
+                  <div class="skim-scene__waterline" aria-hidden="true"></div>
+                  <div class="skim-scene__ripple skim-scene__ripple--1" aria-hidden="true"></div>
+                  <div class="skim-scene__ripple skim-scene__ripple--2" aria-hidden="true"></div>
+                  <div class="skim-scene__stone" aria-hidden="true"></div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="app-card__body">
             <div class="app-card__meta">
-              <span class="badge">Game</span>
-              <span class="app-card__platforms">Google Play · App Store soon</span>
+              <span class="badge badge--coming-soon">Coming soon</span>
+              <span class="app-card__platforms">iOS</span>
             </div>
             <h3 class="app-card__title">
-              <a class="app-card__link" href="sliceball/">Sliceball</a>
+              <a class="app-card__link" href="skim/">Skim</a>
             </h3>
             <p class="app-card__description">
-              Time your slices, drop the ball, clear the level. A quick timing
-              game for a spare minute.
+              Tap to skip the stone across the water. Time it right and watch
+              how far it goes. In development.
             </p>
             <div class="app-card__footer">
               <span class="link-cta" aria-hidden="true">Learn more <span class="arrow">→</span></span>
@@ -107,28 +115,24 @@
     </div>
   </section>
 
-  <!-- ====================== ALL APPS (dormant) ========================
-       With one app, this grid would repeat the hero card, which Jonathan
-       did not want. When the SECOND app ships: (1) move the previous
-       app's <article class="app-card"> into the grid below, (2) put the
-       new app in the hero, (3) uncomment this whole section, (4) point the
-       nav "Apps" link back at #apps. See DESIGN-SPEC.md → "Storefront
-       hero". Kept as a comment so restoring it is an uncomment, not a
-       rebuild.
-
-  <!~~ ============================ ALL APPS ============================= ~~>
+  <!-- ============================ ALL APPS =============================
+       Skim took over the hero 2026-09-14 (still pre-launch — see
+       DESIGN-SPEC.md → "Skim placeholder" for why the storefront hero's
+       usual "most recently SHIPPED app" rule was deliberately bent here).
+       Sliceball, the previous hero app, lives here now with its real
+       screenshot per the "shipped app" `.app-card` rule. -->
   <section class="section" id="apps">
     <div class="container">
       <div class="section-header reveal">
         <p class="eyebrow">All apps</p>
-        <h2>One so far. More on the way.</h2>
+        <h2>Two so far. More on the way.</h2>
         <p class="text-body-lg">Every Mayran Media app gets the same care, and a home right here.</p>
       </div>
 
       <div class="games-grid reveal">
-        <!~~ .app-card: reusable product-card component. Copy this whole
+        <!-- .app-card: reusable product-card component. Copy this whole
              <article> for each additional app — see DESIGN-SPEC.md.
-             `.reveal` lives on `.games-grid`, not on individual cards. ~~>
+             `.reveal` lives on `.games-grid`, not on individual cards. -->
         <article class="app-card">
           <div class="app-card__visual">
             <div class="device device--phone app-card__device">
@@ -152,11 +156,10 @@
             </div>
           </div>
         </article>
-        <!~~ Next app goes here as another <article class="app-card">. ~~>
+        <!-- Next app goes here as another <article class="app-card">. -->
       </div>
     </div>
   </section>
-  -->
 
   <!-- ============================= ABOUT =============================== -->
   <section class="section" id="about">
@@ -172,9 +175,9 @@
           time and shipped when they're actually good.
         </p>
         <p class="text-body-lg" style="margin-top: var(--space-md);">
-          Sliceball is the first release. It won't be the last — this site
-          is built to grow alongside every app that follows, with support
-          and a privacy policy for each one.
+          Sliceball is the first release, and Skim is next up. This site is
+          built to grow alongside every app that follows, with support and
+          a privacy policy for each one.
         </p>
       </div>
     </div>
@@ -216,6 +219,7 @@
       <div class="footer-col">
         <h3>Apps</h3>
         <ul>
+          <li><a href="skim/">Skim</a></li>
           <li><a href="sliceball/">Sliceball</a></li>
         </ul>
       </div>

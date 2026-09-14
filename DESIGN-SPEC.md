@@ -558,6 +558,60 @@ way (phone silhouette + abstracted mechanic + static-first/animate-second
 reduced-motion pattern), sized to fit inside `.app-card__visual` the same
 way.
 
+## Skim placeholder (2026-09-14)
+
+Skim (Unity project `apps/skip`, GitHub `jmayran/Skim`, renamed from
+"Skip") is a second game, still early in development — no store listing,
+no captured screenshots or footage, no support/privacy needs finalized
+yet. Jonathan asked for a placeholder for it on the site, explicitly
+choosing to have it **take over the homepage hero right now**, ahead of
+its actual release — a deliberate, one-time exception to the storefront
+hero rule above ("features exactly ONE app: the most recently shipped
+one"). Sliceball, the previous hero app, moved into the `#apps` grid
+(the grid is no longer dormant) with its normal shipped-app card
+unchanged.
+
+**What's different from a normal app addition, and why:**
+- The hero's `.store-block` has no Play/App Store badge or QR — there is
+  nothing to link to yet. It's a single `.badge--coming-soon` reading
+  "In development" next to the existing "Get help" button.
+- The homepage `.app-card` visual is `.skim-scene` — a new abstract
+  CSS-only illustration (stone, ripples, waterline) following the
+  `.sliceball-scene` pattern for an unreleased app, per the `.app-card`
+  rules above. **Unlike `.sliceball-scene`, it has no animation at all**
+  — a single static frozen frame. The site's motion budget was
+  deliberately capped at two moments (`.sliceball-scene` and the hero
+  parallax — see the note at the end of the `.sliceball-scene` section);
+  adding a third animated flourish would break that restraint, so
+  `.skim-scene` stays still on purpose.
+- `skim/index.html` exists as a minimal placeholder page — Sliceball's
+  "direction C" hero shape (centred copy + one visual as a sibling of
+  `.hero__content`), with `.skim-scene` sized up (`min(280px, 70vw)`) in
+  place of a device-framed video, no tablet band or feature rows (there's
+  no content for them yet), a short "What it is" blurb, and a contact
+  section that points at the *studio-wide* `/support/` and `/privacy/`
+  hubs rather than dedicated `skim/support/`/`skim/privacy/` pages —
+  those don't exist yet and shouldn't be invented before Skim actually
+  has something to disclose.
+- **Skim is intentionally NOT added to the `/support/` or `/privacy/`
+  hub's "By app" `.contact-grid`** — those cards link to a per-app
+  support/privacy page, and Skim doesn't have one. It IS added to every
+  page's footer "Apps" column (linking to `skim/`, a real page) and to
+  the homepage `#apps` grid.
+- Nav "Apps" links site-wide now point at `#apps` again (grid no longer
+  dormant), matching the "when the second app ships" instruction above —
+  even though Skim itself hasn't shipped, the grid itself is no longer
+  single-card.
+
+**When Skim actually ships:** follow the normal flow — real screenshots
+replace `.skim-scene` on its own page (the "one deliberate exception" for
+a game's own page), the homepage card gets the real screenshot per the
+shipped-app `.app-card` rule (or stays in the hero if it's still the
+newest release), the store block gets real badges/QR, and
+`skim/support/`, `skim/privacy/` get built and added to both hubs — at
+that point this section's exceptions stop applying and Skim is just
+another app on the site.
+
 ## Sliceball page (direction C · "Story", 2026-09-13)
 
 Jonathan chose this from three rendered directions on 2026-09-13

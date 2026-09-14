@@ -976,6 +976,97 @@ a.link-cta {
   }
 }
 
+/* ---- Skim abstract visual -----------------------------------------------
+   Pure CSS illustration of the core mechanic (a stone skipping across
+   still water) for the homepage card, following the same pattern as
+   `.sliceball-scene` above — no screenshots or product art exist yet,
+   since Skim is still in development (see DESIGN-SPEC.md → "Skim
+   placeholder"). Unlike `.sliceball-scene`, this one has NO animation at
+   all: the site's motion budget is deliberately capped at the two
+   existing moments (the Sliceball card and the hero parallax) — see the
+   note at the end of the `.sliceball-scene` comment above. A single
+   frozen frame (stone mid-hop, one ripple already fading, the next just
+   forming) implies the motion without adding a third animated element.
+   ------------------------------------------------------------------------ */
+.skim-scene {
+  width: min(220px, 100%);
+}
+.skim-scene__phone {
+  position: relative;
+  aspect-ratio: 9 / 18.5;
+  padding: 10px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: clamp(28px, 10%, 40px);
+  box-shadow: 0 30px 60px -30px var(--shadow-color);
+}
+.skim-scene__island {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 38%;
+  height: 8px;
+  background: var(--color-text);
+  opacity: 0.15;
+  border-radius: var(--radius-full);
+}
+.skim-scene__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-bg-elevated);
+  border-radius: clamp(20px, 8%, 30px);
+}
+.skim-scene__water {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, var(--color-accent-soft));
+}
+.skim-scene__waterline {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 40%;
+  height: 2px;
+  background: var(--color-accent);
+  opacity: 0.55;
+}
+.skim-scene__ripple {
+  position: absolute;
+  bottom: 34%;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-accent);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+.skim-scene__ripple--1 {
+  left: 30%;
+  opacity: 0.15;
+  transform: translateX(-50%) scale(1.6);
+}
+.skim-scene__ripple--2 {
+  left: 56%;
+  opacity: 0.45;
+  transform: translateX(-50%) scale(1);
+}
+.skim-scene__stone {
+  position: absolute;
+  bottom: calc(40% + 30px);
+  left: 74%;
+  width: 16px;
+  height: 9px;
+  background: var(--color-text);
+  border-radius: 3px;
+  opacity: 0.85;
+  transform: translateX(-50%) rotate(-10deg);
+}
+
 /* ---- Device figure + pause chip (Sliceball page) -----------------------
    `.device-figure` is the unit the Sliceball page repeats: one `.device`
    (see "Generic device frames" above) with, when the screen is a looping
@@ -1091,6 +1182,9 @@ a.link-cta {
 }
 .hero__device .device--phone {
   --device-w: min(330px, 70vw);
+}
+.hero__device .skim-scene {
+  width: min(280px, 70vw);
 }
 
 /* ---- Tablet band (Sliceball page) --------------------------------------

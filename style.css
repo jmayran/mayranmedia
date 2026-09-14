@@ -467,6 +467,27 @@ a.link-cta {
 .hero__copy > * + * {
   margin-top: var(--space-md);
 }
+.hero__copy .store-block {
+  /* Same slot `.hero__actions` fills on the Sliceball page: one step
+     more air above the call to action than between the text blocks. */
+  margin-top: var(--space-xl);
+}
+.hero--storefront .store-block__badges {
+  /* The copy column is ~500px wide in the two-column hero and the badge,
+     the "Get help" button and the QR need ~535px on one line, so the QR
+     always wraps here. Make that wrap deliberate: the badge row takes the
+     full line so the QR is on its own row at every width. The basis goes
+     on the badges, not the QR: the QR's `max-width: 220px` clamps its
+     flex-basis before line-breaking, so `flex-basis: 100%` on it would
+     not force the wrap. */
+  flex-basis: 100%;
+}
+.hero--storefront .store-block__qr {
+  /* No hanging left divider on its own row — the divider only makes
+     sense beside the badges, as on the Sliceball page's full-width hero. */
+  padding-left: 0;
+  border-left: 0;
+}
 .hero__featured {
   display: flex;
   justify-content: flex-end;
@@ -673,38 +694,144 @@ a.link-cta {
   padding-top: var(--space-sm);
 }
 
-/* ---- Real screenshot inside .app-card__visual --------------------------
-   `.app-card__shot` replaces the abstract CSS scene once an app has
-   shipped (Jonathan, 2026-09-13: "fix the image with a real screengrab").
-   It is the Sliceball page's `.showcase__video-card` glass ring, copied
-   as-is per DESIGN-SPEC ("copy .showcase__video-card rather than
-   reopening the frame question"), sized the same way the abstract
-   scene was: a fixed width (`min(200px, 100%)`) and the screenshot's own
-   `aspect-ratio`, so the 4:3 visual box simply grows to fit it and
-   nothing is cropped. Do NOT size it by height (`align-self: stretch`
-   was tried first): the box's aspect-ratio height is not definite for a
-   flex child, so the shot fell back to the image's 900px natural width
-   and broke the card. Set `aspect-ratio` to the real file's pixel ratio
-   (store shots here are 900x1955).
+/* ---- Device frame inside .app-card__visual -----------------------------
+   A shipped app's card shows a real screenshot inside the shared
+   `.device--phone` frame (below) instead of an abstract CSS scene.
+   `.app-card__device` only sets the frame's width: `min(180px, 100%)`
+   is the widest the phone can be while the whole card still reads as a
+   card and not a hero (Jonathan approved this from the "direction C"
+   mockup, 2026-09-13). The frame's height comes from the screenshot's
+   own width/height attributes, so the 4:3 visual box simply grows to
+   fit it and nothing is ever cropped. Do NOT size it by height: the
+   box's aspect-ratio height is not definite for a flex child, so a
+   height-based size falls back to the image's 900px natural width and
+   breaks the card (that bit the previous glass-ring shot). Use the
+   island-free `screen-*.webp` crops here, never the raw store shots.
+   The selector is two classes on purpose: `.device--phone` (below, later
+   in the file) sets its own `--device-w: 250px` at single-class
+   specificity, so a bare `.app-card__device` would lose on source order
+   and the card would get the 250px Sliceball-page phone.
    ---------------------------------------------------------------------- */
-.app-card__shot {
-  width: min(200px, 100%);
-  aspect-ratio: 900 / 1955;
-  padding: 5px;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.05));
-  border: 1px solid var(--color-border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 30px 60px -30px var(--shadow-color);
+.app-card__visual .app-card__device {
+  --device-w: min(180px, 100%);
 }
-.app-card__shot img {
+
+/* ---- Generic device frames (shared: homepage card + Sliceball page) -----
+   Jonathan, 2026-09-13: "screengrabs need to all be on generic smart
+   devices, not iPhone-looking ones with an island". One phone, one
+   tablet, one graphite finish, used everywhere footage or a screenshot
+   is shown. Deliberately NOTHING but a uniform bezel and rounded corners:
+   no island, no notch, no home button, no side buttons, no camera
+   housing. That is the line Apple's marketing guidelines draw for
+   "generic devices" (no detail unique to Apple hardware), and it is what
+   keeps the frame from reading as either an iPhone or a Pixel.
+
+   Sizing: set `--device-w` on the element (any length, `min()` is fine);
+   bezel and radius are percentages of it so every size looks like the
+   same object. The SCREEN's height comes from the media's own
+   width/height attributes (`height: auto`), so put the real pixel size
+   on every <img>/<video> inside and nothing is ever cropped:
+     phone gameplay clip  444 x 960   (assets/showcase/gameplay-iphone.*)
+     tablet gameplay clip 720 x 960   (assets/showcase/gameplay-ipad.*)
+     screenshots          900 x 1883  (assets/showcase/screen-*.webp —
+                          the store shots with the island cropped off
+                          the top, 72px; the originals are untouched)
+   Radii: phone bezel 3.2% / corner 17.6%; tablet bezel 3.6% / corner 6%
+   (a real tablet's corners are much tighter than a phone's). The screen
+   radius is corner minus bezel so the two curves stay concentric.
+   ---------------------------------------------------------------------- */
+.device {
+  position: relative;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  background: #2b2b30;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 40px 80px -30px var(--shadow-color);
+}
+.device--phone {
+  --device-w: 250px;
+  width: var(--device-w);
+  padding: calc(var(--device-w) * 0.032);
+  border-radius: calc(var(--device-w) * 0.176);
+}
+.device--phone .device__screen {
+  border-radius: calc(var(--device-w) * 0.144);
+}
+.device--tablet {
+  --device-w: 440px;
+  width: var(--device-w);
+  padding: calc(var(--device-w) * 0.036);
+  border-radius: calc(var(--device-w) * 0.06);
+}
+.device--tablet .device__screen {
+  border-radius: calc(var(--device-w) * 0.024);
+}
+.device__screen {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
-  border-radius: calc(var(--radius-lg) - 5px);
   background: #000;
+}
+
+/* ---- Store block (Play badge + iOS status + QR) -------------------------
+   The primary call to action on both pages. The Google Play badge is
+   Google's OWN artwork (assets/store/google-play-badge.png, downloaded
+   from play.google.com/intl/en_us/badges with Jonathan's OK, 2026-09-13)
+   and must not be recoloured, re-drawn, cropped or animated. The PNG
+   already carries its own clear space, so no extra padding is needed;
+   at 60px tall the badge itself is ~46px, above Google's 40px minimum.
+   The QR code (assets/store/qr-google-play.svg) points at the same Play
+   listing and is hidden on coarse-pointer devices (a phone or tablet in
+   the hand cannot usefully scan itself) and at narrow widths.
+   When the App Store listing goes live: add its official badge FIRST in
+   `.store-block__badges` (Apple's rule), keep the Play badge the same
+   size or larger (Google's rule), replace the coming-soon pill, and
+   point the QR at a device-aware link rather than one store.
+   ---------------------------------------------------------------------- */
+.store-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-md);
+}
+.store-block__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.store-badge {
+  display: inline-flex;
+  border-radius: var(--radius-sm);
+}
+.store-badge img {
+  display: block;
+  height: 60px;
+  width: auto;
+}
+.store-block__qr {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding-left: var(--space-md);
+  border-left: 1px solid var(--color-border);
+  font-size: var(--text-small);
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+  max-width: 220px;
+  text-align: left;
+}
+.store-block__qr img {
+  display: block;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+}
+@media (pointer: coarse), (max-width: 640px) {
+  .store-block__qr {
+    display: none;
+  }
 }
 
 /* ---- Sliceball abstract visual -----------------------------------------
@@ -849,240 +976,249 @@ a.link-cta {
   }
 }
 
-/* ---- Sliceball showcase: real gameplay video ---------------------------
-   Same "one game, one `.<name>-*` visual living in the shared sheet"
-   pattern as `.sliceball-scene` above — this is Sliceball's second visual.
+/* ---- Device figure + pause chip (Sliceball page) -----------------------
+   `.device-figure` is the unit the Sliceball page repeats: one `.device`
+   (see "Generic device frames" above) with, when the screen is a looping
+   <video>, a `.video-toggle` chip directly beneath it. A flex column so
+   the chip is always centred under the device whatever `--device-w` is.
 
-   This used to be a scroll-scrubbed crossfade through six screenshots
-   (view-timeline + @keyframes, one per frame). Jonathan tried it and felt
-   the image-to-image motion looked "robotic" and asked for a real screen
-   recording instead. A muted, looping, autoplaying <video> of an actual
-   Simulator recording (captured, trimmed, and compressed — see
-   DESIGN-SPEC.md's asset-pipeline note) replaces the whole crossfade
-   mechanism: no view-timeline, no @keyframes, no scroll-linked JS.
-   The CSS-drawn phone chassis (notch/buttons/glass highlight) that
-   originally wrapped this video is ALSO gone now — see the
-   `.showcase__video-card` comment below for why — so the video sits in a
-   plain rounded card, not a fake device frame.
-   The six screenshots didn't disappear — they moved to their own
-   `.showcase-gallery` section right below, as a plain swipeable strip
-   (the same peek/snap pattern this gallery used to use as its no-motion
-   fallback), since they're still useful for a static, closer look at
-   specific screens.
+   Why the pause control is a chip UNDER the device and not a glyph on
+   the screen (2026-09-13): the game footage already shows Sliceball's
+   own in-game pause button in the corner, so an overlaid pause glyph
+   read as a second copy of that control and it was not obvious which
+   one was the page's. The chip stays for WCAG 2.2.2 (Pause, Stop, Hide:
+   any auto-starting motion longer than 5s needs a visible stop) -
+   script.js wires it, keeps `data-state` / `aria-pressed` / `aria-label`
+   in sync with the video's own play/pause events, and never auto-starts
+   the clip under `prefers-reduced-motion: reduce`.
 
-   Later still: went from one card to two side by side (iPhone + iPad),
-   to show real footage on both device families rather than implying
-   iPad support only via the "coming to iOS and Android" text. The
-   iPhone clip is genuine real-device footage (recorded on an actual
-   iPhone, not a Simulator) -- Jonathan's original ask, all the way back,
-   was for this to look like "a real phone playing the game," and actual
-   hardware footage satisfies that more directly than any Simulator
-   recording could. The iPad clip is a fresh Simulator recording. Each
-   card's `aspect-ratio` matches its own source recording's native pixel
-   dimensions exactly (see `.showcase__video-card` below) -- don't reuse
-   one card's ratio for the other, and don't assume both will ever share
-   one ratio going forward.
-
-   Most recent round: Jonathan asked to bring back "a real phone" around
-   the video after all -- but explicitly not the earlier illustrated
-   chassis (bezel/notch/buttons), which had read as more "mockup" than
-   the plain screenshots it replaced. Three genuinely different frame
-   options were mocked up and shown side by side (a plain rounded card
-   with no frame at all; a refined photorealistic-style device bezel;
-   and a minimal glass edge) before touching this file -- see
-   DESIGN-SPEC.md's `.showcase` section for the full writeup of all
-   three. Jonathan picked the minimal glass edge: a thin translucent
-   ring plus a soft floating shadow, `.showcase__video-card` below --
-   deliberately not an illustrated phone (no notch, no buttons, no claim
-   to a specific model), just enough materiality to say "this sits
-   inside something."
-   ------------------------------------------------------------------------ */
-.showcase {
-  position: relative;
-  padding-block: var(--space-section);
-}
-.showcase::before {
-  /* Same ambient glow treatment as .hero, mirrored underneath this
-     section too -- Apple product pages repeat a soft color wash behind
-     each major showcase moment, not just the very first one. */
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: radial-gradient(100% 70% at 50% 40%, var(--color-accent-soft), transparent 70%);
-  pointer-events: none;
-}
-.showcase__grid {
-  display: grid;
-  gap: var(--space-2xl);
-  align-items: center;
-}
-.showcase__copy h2 {
-  margin-top: var(--space-2xs);
-}
-.showcase__list {
-  margin-top: var(--space-md);
-  padding-left: 1.1em;
-  color: var(--color-text-secondary);
-}
-.showcase__list li {
-  padding-left: var(--space-3xs);
-}
-.showcase__list li + li {
-  margin-top: var(--space-2xs);
-}
-.showcase__stage {
-  /* Two devices side by side (iPhone + iPad), to show the game is real,
-     playable footage on both -- not just "coming to iOS and Android" as
-     text. Wraps to stacked on narrow viewports rather than squeezing
-     both cards below a usable width. */
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: var(--space-xl);
-}
-.showcase__device {
+   Chip shape: the `.badge--coming-soon` pill language (hairline border,
+   `--radius-full`, `--text-small`, 600 weight) in `--color-text-secondary`
+   so it reads as a quiet utility control, not a call to action. 32px
+   tall visually; the transparent `::before` extends the hit area to 44px
+   (WCAG 2.5.8 / Apple HIG) without making the pill itself taller. Both
+   the icon and the label are drawn twice (pause + play variants) and
+   swapped by `data-state` in CSS, so script.js only flips one attribute.
+   ---------------------------------------------------------------------- */
+.device-figure {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
 }
-.showcase__video-card {
-  /* Minimal glass edge -- the direction Jonathan picked from three
-     options mocked up side by side (see the section comment above and
-     DESIGN-SPEC.md). A thin translucent ring (the gradient background
-     + 1px border below) and a soft floating shadow, NOT an illustrated
-     phone: no notch, no side buttons, nothing claiming a specific
-     device model. `padding` on this element IS the ring's thickness --
-     the video sits inset from it, so don't remove the padding without
-     also rethinking the ring (it'd collapse to nothing). This also
-     still sidesteps the crop problem the old chassis caused: each
-     card's aspect-ratio matches its own recording's native ratio
-     exactly (iPhone real-device footage: 498:1080; iPad Simulator
-     footage: 720:960 -- see the two rules below), so `object-fit:
-     cover` on `.showcase__video` never has to crop anything; it's only
-     there as a safety net if a future re-recording comes in at a
-     slightly different ratio. Sized smaller than the old single-card
-     layout (min(220px, 42vw) vs. the old min(300px, 78vw)) since two
-     sit side by side. */
+.video-toggle {
   position: relative;
-  width: min(220px, 42vw);
-  padding: 5px;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.05));
-  border: 1px solid var(--color-border);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.4),
-    0 30px 60px -30px var(--shadow-color);
-}
-.showcase__device:nth-child(1) .showcase__video-card {
-  aspect-ratio: 498 / 1080;
-}
-.showcase__device:nth-child(2) .showcase__video-card {
-  aspect-ratio: 720 / 960;
-}
-.showcase__video {
-  /* The "screen" inside the glass ring -- its own slightly smaller
-     radius so the ring reads as a frame around it, not just a shadow
-     the video happens to sit near. `background: #000` (moved here from
-     `.showcase__video-card`, which is now the translucent ring instead
-     of the screen) shows through as a dark backdrop before the video's
-     first frame paints. */
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  border-radius: calc(var(--radius-lg) - 5px);
-  background: #000;
-}
-.showcase__video-toggle {
-  /* A visible, always-available pause control for the auto-looping
-     video -- WCAG 2.2.2 (Pause, Stop, Hide) requires a way to stop any
-     auto-starting motion that lasts more than 5 seconds, and this loops
-     indefinitely. See script.js for the click handler and the
-     prefers-reduced-motion gate that keeps this video from ever
-     auto-starting for users who've asked for less motion. */
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  z-index: 4;
-  width: 34px;
-  height: 34px;
-  padding: 0;
-  border: none;
-  border-radius: var(--radius-full);
-  background: rgba(0, 0, 0, 0.45);
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: var(--space-2xs);
+  height: 32px;
+  padding: 0 var(--space-sm);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  font-family: var(--font-text);
+  font-size: var(--text-small);
+  font-weight: 600;
+  line-height: 1;
   cursor: pointer;
 }
-.showcase__video-toggle:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
+.video-toggle::before {
+  /* Invisible hit-area extension: 6px above and below the 32px pill
+     makes the target 44px tall. Horizontal extent is already > 44px. */
+  content: "";
+  position: absolute;
+  inset: -6px 0;
 }
-.showcase__video-toggle-icon {
+.video-toggle:hover {
+  color: var(--color-text);
+}
+.video-toggle__icon,
+.video-toggle__text {
   display: none;
 }
-.showcase__video-toggle[data-state="playing"] .showcase__video-toggle-icon--pause,
-.showcase__video-toggle[data-state="paused"] .showcase__video-toggle-icon--play {
+.video-toggle[data-state="playing"] .video-toggle__icon--pause,
+.video-toggle[data-state="playing"] .video-toggle__text--pause,
+.video-toggle[data-state="paused"] .video-toggle__icon--play,
+.video-toggle[data-state="paused"] .video-toggle__text--play {
   display: block;
 }
-.showcase__video-toggle-icon--pause {
+.video-toggle__icon--pause {
   width: 3px;
-  height: 12px;
-  background: #fff;
-  box-shadow: 6px 0 0 #fff;
+  height: 10px;
+  background: currentColor;
+  box-shadow: 5px 0 0 currentColor;
+  margin-right: 5px; /* room for the box-shadow bar, which takes no layout space */
 }
-.showcase__video-toggle-icon--play {
+.video-toggle__icon--play {
   width: 0;
   height: 0;
-  margin-left: 2px; /* optical centering: a triangle's visual weight sits left of its box */
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-left: 10px solid #fff;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid currentColor;
 }
 
-@media (min-width: 700px) {
-  .showcase__grid {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
-  }
+/* ---- Story hero (Sliceball page) ---------------------------------------
+   `.hero--story` centres the base hero and lets ONE `.device-figure`
+   (`.hero__device`) hang down out of the hero over the grey band below.
+   The overlap is a shared custom property, `--hero-overlap`, consumed by
+   two rules that must stay in step: the figure's negative bottom margin
+   here, and `.story-tablet`'s top padding below (which reserves the same
+   space again so the tablet copy starts below the phone, not under it).
+   The two sections are siblings, so the property is declared on BOTH
+   (custom properties only inherit downwards) - 200px on desktop, 140px
+   at 800px and below.
+
+   The base `.hero` clips (`overflow: hidden`) to contain its glow;
+   this variant must NOT clip, or the hanging phone is cut off at the
+   hero's bottom edge. The glow (`.hero::before`, `inset: 0`) never
+   overflows anyway, so nothing is lost. `position: relative; z-index: 1`
+   on the figure paints it above the following section's background.
+   ---------------------------------------------------------------------- */
+.hero--story,
+.story-tablet {
+  --hero-overlap: 200px;
+}
+.hero--story {
+  overflow: visible;
+  padding-bottom: 0;
+  text-align: center;
+}
+.hero--story .hero__content {
+  margin-inline: auto;
+}
+.hero--story h1,
+.hero--story .hero__lead {
+  margin-inline: auto;
+}
+.hero--story .store-block,
+.hero--story .store-block__badges {
+  /* Both levels centre: the block itself, and the badge row inside it
+     once the Play badge and the coming-soon pill wrap onto two lines. */
+  justify-content: center;
+}
+.hero--story .store-block {
+  margin-top: var(--space-xl);
+}
+.hero__device {
+  position: relative;
+  z-index: 1;
+  margin-top: var(--space-2xl);
+  margin-bottom: calc(-1 * var(--hero-overlap));
+}
+.hero__device .device--phone {
+  --device-w: min(330px, 70vw);
 }
 
-/* ---- Sliceball screenshot gallery (secondary) ---------------------------
-   The six real screenshots that used to crossfade inside the showcase
-   phone now live here instead, as a plain horizontally-scrolling,
-   snap-to-frame strip — the exact same peek/swipe pattern
-   `.showcase__screen`/`.showcase__frame` used as their no-motion
-   fallback, just without a phone chassis around each shot. */
-.showcase-gallery {
-  padding-block: var(--space-section);
+/* ---- Tablet band (Sliceball page) --------------------------------------
+   The `--color-bg-elevated` section the hero phone hangs into. Its top
+   padding = the overlap the phone occupies + one normal section gap, so
+   the grid below starts clear of the phone. Two columns (copy | tablet)
+   on desktop; copy-first, centred, single column at 800px and below -
+   the same breakpoint the storefront hero collapses at.
+   ---------------------------------------------------------------------- */
+.story-tablet {
+  background: var(--color-bg-elevated);
+  padding-top: calc(var(--hero-overlap) + var(--space-section));
+  padding-bottom: var(--space-section);
 }
-.showcase-gallery__strip {
+.story-tablet__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: var(--space-2xl);
+  align-items: center;
+}
+.story-tablet__copy > * + * {
+  margin-top: var(--space-md);
+}
+.story-tablet__copy h2 {
+  margin-top: var(--space-2xs);
+}
+.story-tablet__pills {
   display: flex;
-  gap: var(--space-md);
-  margin-top: var(--space-lg);
-  padding-inline: var(--space-md);
-  padding-bottom: var(--space-2xs);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
 }
-.showcase-gallery__strip::-webkit-scrollbar {
-  display: none;
+.story-tablet__device .device--tablet {
+  /* `100%` (the grid column) rather than a vw: at 1280 the column is
+     ~500px, so a fixed 520px would spill 10px into the gutter. */
+  --device-w: min(520px, 100%);
 }
-.showcase-gallery__shot {
-  flex: 0 0 auto;
-  width: min(220px, 55vw);
-  height: auto;
-  aspect-ratio: 900 / 1955;
-  object-fit: cover;
-  border-radius: var(--radius-md);
-  scroll-snap-align: center;
-  box-shadow: 0 20px 40px -24px var(--shadow-color);
+
+/* ---- Feature rows (Sliceball page) ------------------------------------
+   Three rows, each copy + one framed screenshot, alternating sides
+   (text | phone, phone | text, text | phone). The swap is `order` on
+   even rows' copy, so the DOM is always copy-then-image and reading
+   order never changes. `.feature-row__index` is the old step-card's
+   "01/02/03" style, kept as the row's small accent counter. At 800px
+   and below each row stacks: centred copy, then a 220px phone.
+   ---------------------------------------------------------------------- */
+.feature-rows .container > * + * {
+  margin-top: var(--space-3xl);
+}
+.feature-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-2xl);
+  align-items: center;
+}
+.feature-row__copy {
+  max-width: var(--measure);
+}
+.feature-row__copy > * + * {
+  margin-top: var(--space-md);
+}
+.feature-row:nth-child(even) .feature-row__copy {
+  order: 2;
+}
+.feature-row__index {
+  display: block;
+  font-family: var(--font-text);
+  font-size: var(--text-small);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+}
+.feature-row__copy h2 {
+  margin-top: var(--space-2xs);
+}
+.feature-row__device {
+  display: flex;
+  justify-content: center;
+}
+.feature-row__device .device--phone {
+  --device-w: min(260px, 70vw);
+}
+
+@media (max-width: 800px) {
+  .hero--story,
+  .story-tablet {
+    --hero-overlap: 140px;
+  }
+  .story-tablet__grid {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: center;
+  }
+  .story-tablet__pills {
+    justify-content: center;
+  }
+  .feature-rows .container > * + * {
+    margin-top: var(--space-2xl);
+  }
+  .feature-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-lg);
+    text-align: center;
+  }
+  .feature-row__copy {
+    margin-inline: auto;
+  }
+  .feature-row:nth-child(even) .feature-row__copy {
+    order: 0;
+  }
+  .feature-row__device .device--phone {
+    --device-w: min(220px, 70vw);
+  }
 }
 
 /* ---- Contact ------------------------------------------------------------- */

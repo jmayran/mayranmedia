@@ -21,15 +21,15 @@ only `tokens.css`, `style.css`, and (if it needs scroll reveal)
 OS setting.** This was a deliberate call (not a bug or an oversight): a
 bright, white-by-default page reads as more inviting, closer to how
 apple.com's own product pages present — see "Color tokens" below for the
-mechanism. The Sliceball page's hero also deliberately carries no visual
-mockup at all now — just the headline, subhead and CTAs — because the
-page's one big visual moment is the real gameplay video in `#showcase`
-just below it; see that section for why a second, competing visual
-(an earlier CSS-drawn abstract scene) was removed from the hero.
+mechanism. The Sliceball page's hero is headline, subhead, the store
+block and ONE phone playing real footage (`#showcase`), hanging down
+over the section below it — see "Sliceball page (direction C)" for the
+layout and for why every screen on that page sits in the same generic
+device frame.
 
 **One deliberate exception:** a game's own dedicated page may use real,
 optimized local screenshot files (`.webp`, no CDN, no build step) once
-the game has them — see `.showcase` below. This does NOT relax the
+the game has them — see "Sliceball page" below. This does NOT relax the
 `.app-card` rule on the homepage (still abstract-only pre-launch); it
 only applies to a game's own page, where showing the real thing is the
 point.
@@ -40,7 +40,7 @@ point.
 |---|---|
 | `tokens.css` | All design tokens (custom properties). Load first. |
 | `style.css` | Reset, base type, layout primitives, shared components (header, footer, buttons, badges, `.app-card`, `.reveal`, hero). Load second. |
-| `script.js` | IntersectionObserver wiring for `.reveal`. Nothing else lives here — keep it that way. |
+| `script.js` | IntersectionObserver wiring for `.reveal`, plus the Sliceball page's video pause/play chips and their `prefers-reduced-motion` gate. Nothing else lives here — keep it that way. |
 | `index.html` | Homepage. Also the reference implementation for every pattern below. |
 
 A new page (e.g. `sliceball/index.html`) should link `../tokens.css`,
@@ -87,10 +87,10 @@ the token instead, even for a color that "matches" one already in
 | `--color-border` | `rgba(0,0,0,.1)` | Hairline dividers |
 | `--color-border-strong` | `rgba(0,0,0,.45)` | Card borders, hover states, AND any component boundary that must independently clear WCAG 3:1 non-text contrast (`.btn-secondary`, `.badge`) — measured ≥3.3:1 against both `--color-bg` and `--color-bg-elevated` |
 | `--color-accent` | `#14663a` | **The** one accent — links, CTAs, badges, focus ring |
-| `--color-accent-soft` | `rgba(20,102,58,.1)` | Decorative fills ONLY — never behind text (see note below). Also used for the `.hero`/`.showcase` ambient background glow — see that section. |
+| `--color-accent-soft` | `rgba(20,102,58,.1)` | Decorative fills ONLY — never behind text (see note below). Also used for the `.hero` ambient background glow — see that section. |
 | `--color-on-accent` | `#ffffff` | Text/icons placed on a solid `--color-accent` surface |
 | `--color-focus-ring` | `#14663a` | Alias of `--color-accent`, used by `:focus-visible` |
-| `--shadow-color` | `rgba(0,0,0,.3)` | Elevation `box-shadow`s (`.app-card:hover`, `.showcase__video-card`) — never hardcode a shadow color |
+| `--shadow-color` | `rgba(0,0,0,.3)` | Elevation `box-shadow`s (`.app-card:hover`, `.device`) — never hardcode a shadow color |
 
 **Why `--color-on-accent` is its own token, not `var(--color-bg)`:** they
 happen to resolve to the same white today, but they mean conceptually
@@ -102,7 +102,7 @@ explicitly wherever text sits on a solid accent fill.
 accent-colored text against a `--color-accent-soft`-tinted card
 background does not clear AA. Use it for non-text decoration (the
 Sliceball ball's glow ring, the subtle radial wash in
-`.app-card__visual`, the hero/showcase ambient glow) — never as a fill
+`.app-card__visual`, the hero ambient glow) — never as a fill
 sitting behind `--color-accent` (or any) text. The `.badge` component
 fills with `--color-bg` instead for exactly this reason — see its
 section below.
@@ -200,19 +200,20 @@ a big stat number).
 
 **Launch state as of 2026-09-13 (Android live, iOS still in review):**
 the homepage `.app-card` carries a plain `.badge` reading "Out now" with
-`.app-card__platforms` reading "Android · iOS coming soon". The Sliceball
-hero's `.hero__actions` holds one `.btn-primary` linking straight to the
-Play listing (`https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball`,
-plain text "Get it on Google Play" — no external badge artwork, per the
-no-external-assets rule) beside a `.badge--coming-soon` reading
-"App Store · Coming soon". `.hero__actions` gained `align-items: center`
-for exactly this mix, since a 44px button and a 28px badge would
-otherwise stretch to the same height and the badge would read as a
-second button. **When iOS is approved:** replace that badge with a
-second link to the App Store listing as a `.btn-secondary` (one primary
-per view — Google Play keeps primary only because it shipped first; it
-is fine to make them both secondary), change the card's platforms text
-to "iOS · Android", and update the footer line and both meta
+`.app-card__platforms` reading "Android · iOS coming soon". Both heroes
+(homepage and Sliceball) carry the shared `.store-block`: Google's
+official "Get it on Google Play" badge (`assets/store/google-play-badge.png`,
+linking straight to `https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball`)
+beside a `.badge--coming-soon` reading "App Store · Coming soon", and a
+QR code for the same listing. The Sliceball tablet band adds a plain
+`.badge` "Android tablets · Out now" and a `.badge--coming-soon`
+"iPad · Coming soon". **When iOS is approved:** add Apple's official
+App Store badge FIRST in `.store-block__badges` (Apple's placement
+rule) at the same 60px height (Google's "never smaller than the App
+Store badge" rule), drop both coming-soon pills (the tablet band's
+becomes a plain `.badge` "iPad · Out now" or goes away), point the QR at
+a device-aware link rather than one store, change the card's platforms
+text to "iOS · Android", and update the footer line and both meta
 descriptions, which currently read "out now on Android, coming soon to
 iOS" on every page.
 
@@ -332,11 +333,42 @@ thing a visitor sees.
 `.hero__content` becomes a two-column grid — `.hero__copy` (eyebrow, H1,
 lead, `.hero__actions`) on the left, `.hero__featured` holding a single
 `.app-card` on the right — collapsing to one column under 800px. The
-primary button is that app's direct store link ("Get Sliceball on Google
-Play"); the secondary is "Get help" → `#help`. **When a new app ships,
-replace the card and the primary button with the new app, and move the
-previous app's card into the `#apps` grid** — never put two apps in the
-hero. The hero is a spotlight, the grid is the complete catalog.
+primary action is that app's `.store-block` (see the "Store block"
+comment in `style.css`): Google's official "Get it on Google Play"
+badge linking straight to the listing, the "Get help" `.btn-secondary`
+(→ `#help`) beside it, and a QR code for the same listing underneath.
+**When a new app ships, replace the card and the store block with the
+new app, and move the previous app's card into the `#apps` grid** —
+never put two apps in the hero. The hero is a spotlight, the grid is the
+complete catalog.
+
+**Primary action is the official Play badge + QR, not a green button
+(2026-09-13, "direction C" mockup).** A visitor on a desktop cannot tap
+through to a phone store, so the old `.btn-primary` ("Get Sliceball on
+Google Play") mostly led to a page they could not use; the badge is the
+artwork people already recognise as "this is on Google Play", and the QR
+is the way to actually get it onto the phone from a desktop. The QR
+(`.store-block__qr`) hides itself on coarse-pointer devices and under
+640px — a phone cannot scan itself. On the homepage the QR always sits
+on its own row under the badge row with no left divider
+(`.hero--storefront .store-block__badges { flex-basis: 100% }` plus a
+divider-less `.hero--storefront .store-block__qr`): the copy column is
+~500px wide in the two-column hero and the three pieces need ~535px on
+one line, so rather than let the shared component wrap by accident
+(which left a divider hanging off the second row, and put the QR inline
+again between 640 and 800px), the wrap is forced at every width and the
+divider dropped. The basis sits on the badge row, not the QR, because
+the QR's `max-width` clamps its own flex-basis before line-breaking.
+The badge (60px) and the 44px secondary button share one
+centre line via `align-items: center`; measured centre delta 0px in
+both engines at 1280 and 375. `.hero__actions` is no longer used by any
+page (the Sliceball hero moved to the same `.store-block` on
+2026-09-13); its CSS rule is left in place for a future page that needs
+a plain button row. **When iOS ships:**
+add Apple's official App Store badge FIRST in `.store-block__badges`
+(Apple's rule), keep the Play badge at least as large (Google's rule),
+and point the QR at a device-aware link rather than one store — see the
+"Store block" comment in `style.css`.
 
 **The scroll parallax fades the copy column only, never the featured
 card.** `hero-parallax` (opacity → 0.4 over the first 400px of scroll)
@@ -419,7 +451,11 @@ for any future grid that has a fixed-px minmax floor.
 ```html
 <article class="app-card">
   <div class="app-card__visual">
-    <!-- game-specific abstract visual goes here, e.g. .sliceball-scene -->
+    <!-- unreleased: a game-specific abstract visual, e.g. .sliceball-scene
+         shipped:    <div class="device device--phone app-card__device">
+                       <img class="device__screen" src="…/screen-03-slicing.webp"
+                            alt="…" width="900" height="1883" decoding="async">
+                     </div> -->
   </div>
   <div class="app-card__body">
     <div class="app-card__meta">
@@ -456,22 +492,38 @@ for any future grid that has a fixed-px minmax floor.
   and clipped (Jonathan's Safari screenshot, 2026-09-13). Chrome never
   showed it. Test card layout changes in WebKit, not just Chrome — see
   README → verification for the headless WebKit renderer.
-- **Shipped app: a real screenshot.** Since 2026-09-13 the Sliceball
-  card's visual is `.app-card__shot` — the `.showcase__video-card` glass
-  ring copied as-is, stretched to the 4:3 box's height with the image's
-  own `aspect-ratio` (store shots are 900x1955) so nothing crops — holding
-  one of the privacy-screened store screenshots already in
-  `sliceball/assets/showcase/` (`showcase-03-slicing.webp`, the action
-  shot). No new asset pipeline: reuse the gallery's webp files.
+- **Shipped app: a real screenshot in the generic phone frame.** Since
+  2026-09-13 the Sliceball card's visual is the shared `.device
+  .device--phone` frame (see "Generic device frames" in `style.css`) with
+  the extra class `.app-card__device`, which only sets
+  `--device-w: min(180px, 100%)` — the widest the phone can be while the
+  card still reads as a card (Jonathan approved this from the
+  "direction C" mockup, 2026-09-13, replacing the earlier
+  `.app-card__shot` glass ring, which is gone). Inside it is a
+  `.device__screen` <img> with real `width`/`height` attributes, so the
+  frame's height comes from the file and the 4:3 visual box grows to fit
+  — nothing crops, and nothing is sized by height (a height-based size
+  is not definite for a flex child and fell back to the image's 900px
+  natural width once already). **Use the island-free crops**
+  (`sliceball/assets/showcase/screen-*.webp`, 900x1883 — the store shots
+  with the iPhone island cropped off the top), never the raw
+  `showcase-*.webp` store shots: the frame is deliberately generic (no
+  island, notch, buttons or camera housing, per Apple's marketing
+  guidelines on generic devices), and an island inside a generic frame
+  would give the game away as "an iPhone". The 250px `.device--phone`
+  default is for the Sliceball page; the card override is
+  `.app-card__visual .app-card__device` (two classes) because
+  `.device--phone` sets its own `--device-w` later in the file at
+  single-class specificity and would otherwise win on source order.
 - **Unreleased app: no real screenshots/video** on this compact card —
   build an abstract CSS-only visual instead (no external image/video
-  files, no CDN) and swap to `.app-card__shot` at launch. The
+  files, no CDN) and swap to the `.device--phone` frame at launch. The
   `.sliceball-scene` CSS stays in `style.css` as the worked example. Give it its own class namespace, e.g.
   `.puzzlename-scene`, following the `.sliceball-scene` pattern below,
   and follow the reduced-motion pattern (static default, animation added
   only under `no-preference`). This is specifically about the small
   homepage card — a game's own dedicated page is a different context and
-  may use real screenshots once captured; see `.showcase` below.
+  may use real screenshots once captured; see "Sliceball page" below.
 - `.app-card__platforms` is plain text ("iOS · Android") — no icon fonts.
 - Badge: `.badge--coming-soon` pre-launch; swap to a plain `.badge` (or
   remove it) once real store links exist.
@@ -503,178 +555,156 @@ way (phone silhouette + abstracted mechanic + static-first/animate-second
 reduced-motion pattern), sized to fit inside `.app-card__visual` the same
 way.
 
-## `.showcase` — real gameplay video (game page only, not the homepage card)
+## Sliceball page (direction C · "Story", 2026-09-13)
 
-Unlike `.sliceball-scene` (abstract, pre-launch, lives on the homepage
-card), `.showcase` is Sliceball's *second* visual on its own dedicated
-page — this section's whole point is showing the real, playable game.
-A future game's page gets its own `.<gamename>-showcase`-prefixed copy
-of this pattern, not a shared class — see the "don't reuse scene
-classes" rule above; the same reasoning applies here.
+Jonathan chose this from three rendered directions on 2026-09-13
+(A: a "product shot" hero with the old two-video showcase kept; B: a
+"gallery" grid of framed screens; C: this "story" — one phone in the
+hero, a tablet band, then three alternating feature rows that tell the
+game in order). It replaces the previous `.showcase` two-video card
+section, the `#screens` swipe strip and the `#how-it-works` step cards
+in one pass; their CSS (`.showcase*`, `.showcase-gallery*`,
+`.steps-grid`, `.step-card*`, the page's inline `<style>`) is gone.
+The page is, top to bottom:
 
-**History, briefly, because it explains why the markup looks the way it
-does:** this section went through four real designs in this pass, each
-one a direct response to Jonathan looking at the last one:
-1. A scroll-scrubbed crossfade through six screenshots inside a
-   CSS-drawn phone chassis (`view-timeline` + six `@keyframes`).
-   Jonathan felt the image-to-image motion looked "robotic."
-2. Swapped the six crossfading images for a real, muted/looping/
-   autoplaying `<video>` of actual Simulator gameplay — but kept it
-   inside the same CSS phone chassis (bezel, notch, side buttons, glass
-   highlight). Jonathan said to get rid of the mockup phone too: a
-   hand-drawn fake frame around genuine footage read as *more* like a
-   mockup than the plain screenshots it replaced, not less.
-3. Dropped the chassis entirely — the video sat by itself in a plain
-   rounded card, nothing pretending to be a physical device.
-4. **Current design:** Jonathan asked to bring a "real phone" frame back
-   after all. Rather than guess, three genuinely different options were
-   mocked up side by side (as their own review artifact, not in this
-   codebase) and shown to him before touching this file: (a) the plain
-   card from step 3, kept as a baseline; (b) a refined photorealistic-
-   style device bezel (metal-edge gradient, soft pill cutout, one
-   diagonal glass sheen — deliberately not the illustrated step-2
-   chassis, no drawn seams or glossy buttons); (c) a minimal glass edge —
-   just a thin translucent ring and a soft floating shadow, no notch, no
-   buttons, no claim to a specific phone model. Jonathan picked (c). See
-   `.showcase__video-card` below for the implementation.
+1. **`.hero.hero--story`** (`#top`) — centred `.hero__content`
+   (eyebrow "A Mayran Media game", H1 "Sliceball" — the H1 stays the bare
+   app name for search/store-preview reasons — lead, then the shared
+   `.store-block`) and, as a SIBLING of `.hero__content`, a
+   `.device-figure.hero__device` (`#showcase`) holding the phone clip at
+   `--device-w: min(330px, 70vw)`. Sibling, not child, because the
+   `hero-parallax` fade targets `.hero__content` on non-storefront heroes
+   and must never dim the footage (the same rule the homepage's featured
+   card follows). The figure hangs `--hero-overlap` (200px; 140px at
+   800px and below) down over the next section via a negative bottom
+   margin, `position: relative; z-index: 1`; `.hero--story` is
+   `overflow: visible` so the phone is not clipped at the hero's edge
+   (the base `.hero` clips, but its glow never overflows anyway).
+2. **`.story-tablet`** (`#tablet`) — the `--color-bg-elevated` band the
+   phone hangs into. Its top padding is `var(--hero-overlap) +
+   var(--space-section)`, so the phone's overlap and this padding are
+   the SAME custom property declared on both siblings (custom properties
+   only inherit downwards) — change one and the other follows. Two-column
+   grid (copy `1fr` | tablet `1.1fr`), copy-first single column and
+   centred at 800px and below. Copy: eyebrow "Bigger screen", H2 "Made
+   for the tablet on the couch, too.", one `.text-body-lg` line, and
+   `.story-tablet__pills` (plain `.badge` "Android tablets · Out now",
+   `.badge--coming-soon` "iPad · Coming soon"). Tablet:
+   `.device-figure.story-tablet__device` > `.device--tablet` at
+   `--device-w: min(520px, 100%)` (percentage, not vw — at 1280 the grid
+   column is ~500px and a fixed 520px spilled into the gutter) with its
+   own pause chip.
+3. **`.feature-rows`** (`#features`, white) — three `.feature-row`
+   articles, each `.feature-row__copy` (`.feature-row__index` "01"/"02"/
+   "03" in the old step-card counter style: `--text-small`, 700,
+   `0.04em`, accent; H2; `.text-body-lg` paragraph) beside a
+   `.feature-row__device` > `.device--phone` at `--device-w: min(260px,
+   70vw)` holding one screenshot. Sides alternate text|phone,
+   phone|text, text|phone via `order: 2` on even rows' copy — the DOM is
+   always copy-then-image so reading order never changes. At 800px and
+   below every row stacks copy-first, centred, phone at `min(220px,
+   70vw)`. Row gap `--space-3xl` (desktop) / `--space-2xl` (stacked).
+   Only the three island-free shots are used: `screen-03-slicing.webp`
+   (01 "Slice through the stack."), `screen-02-gameplay.webp` (02 "Time
+   it right and the ball drops clean."), `screen-05-shop-balls.webp` (03
+   "Spend what you earn."). The old `showcase-0N.webp` files are still
+   on disk, unreferenced by this page.
+4. **`#contact`** — unchanged Support & Privacy cards.
 
-   **Reconfirmed, locked in:** revisited later when Jonathan was deciding
-   between (a) and (c) again for a different reason — he specifically
-   wants the showcase to read as generic mobile gameplay, not tied to
-   iPhone or Android. (c)'s complete lack of device-specific chrome (no
-   notch/Dynamic Island shape, no button cutouts) already made it the
-   platform-neutral choice — it still reads as "a real phone playing
-   this" without implying a brand, whereas (a) is neutral only because it
-   doesn't imply "phone" at all. **This is the final treatment — don't
-   revisit it again without a real reason**, and if a future device card
-   ever needs the same treatment, copy `.showcase__video-card` as-is
-   rather than reopening the frame-style question.
+Nav "How it works" now points at `#features`; nothing else in the repo
+linked to `#screens` or `#how-it-works`.
 
-**Markup** (see `sliceball/index.html`, `#showcase` section — this
-example shows one device card; the live page has two side by side, see
-"Two-device showcase" below for the wrapping `.showcase__device` +
-label markup):
+**Device-frame rules (`.device`, shared with the homepage card).** Every
+screen on the page — both clips and all three screenshots — sits in the
+same generic `.device` (`.device--phone` or `.device--tablet`; see the
+"Generic device frames" comment in `style.css`): one graphite bezel,
+uniform rounded corners, and nothing else — no island, notch, buttons or
+camera — so it reads as neither an iPhone nor a Pixel (Jonathan,
+2026-09-13: "generic smart devices, not iPhone-looking ones with an
+island"). Size ONLY via `--device-w` on a page-specific wrapper rule
+(`.hero__device .device--phone`, `.story-tablet__device .device--tablet`,
+`.feature-row__device .device--phone`) — bezel and radius scale from it.
+The screen's height comes from the media's own `width`/`height`
+attributes (`height: auto`), so every `<img>`/`<video>` inside MUST carry
+its real pixel size (phone clip 444×960, tablet clip 720×960,
+screenshots 900×1883) and nothing is ever cropped — verified 2026-09-13
+in WebKit and Chrome at 1280 and 375: every `.device__screen`'s rendered
+aspect equals its natural aspect, every `.device` is centred in its
+parent to the pixel, no horizontal overflow, overlap measures exactly
+200/140px.
 
-```html
-<div class="showcase__stage reveal">
-  <div class="showcase__device">
-    <div class="showcase__video-card">
-      <video class="showcase__video" autoplay muted loop playsinline
-             poster="assets/showcase/gameplay-iphone-poster.webp"
-             aria-label="Real Sliceball gameplay on iPhone: slicing down through a stack and clearing the level.">
-        <source src="assets/showcase/gameplay-iphone.mp4" type="video/mp4">
-      </video>
-      <button type="button" class="showcase__video-toggle" data-state="playing"
-              aria-pressed="true" aria-label="Pause iPhone gameplay video">
-        <span class="showcase__video-toggle-icon showcase__video-toggle-icon--pause" aria-hidden="true"></span>
-        <span class="showcase__video-toggle-icon showcase__video-toggle-icon--play" aria-hidden="true"></span>
-      </button>
-    </div>
-  </div>
-  <!-- a second .showcase__device for iPad sits alongside this one -->
-</div>
-```
+**Pause chip (`.video-toggle`), and why it is OUTSIDE the screen.** Each
+looping clip still needs a visible stop (WCAG 2.2.2), but the game's own
+in-game pause button is visible in the footage, so the old glyph overlaid
+bottom-right on the video read as a duplicate control. The toggle is now
+a chip directly under the device inside the `.device-figure` (flex
+column, `gap: var(--space-xs)`): `.badge--coming-soon` pill language
+(`--color-border-strong` hairline, `--radius-full`, `--text-small`, 600)
+in `--color-text-secondary` on a `--color-bg` fill (the pill is white in
+both the white and the grey sections, so the text is always 5.07:1),
+32px tall, with a transparent `::before` extending the hit area to 44px.
+Visible text "Pause video"/"Play video" plus the pause/play glyph, both
+drawn twice and swapped by CSS off `data-state` — `script.js` only flips
+`data-state`/`aria-pressed`/`aria-label`. **Label-in-name rule (WCAG
+2.5.3):** the visible chip text must be a prefix/substring of the
+accessible name, so the `aria-label` is "Pause video (phone gameplay)" /
+"Play video (phone gameplay)" and "… (tablet gameplay)" — the visible
+"Pause video"/"Play video" first, the qualifier that tells the two chips
+apart in parentheses after it. `script.js` parses the qualifier out of
+the initial label with `/^(?:Pause|Play) video \((.+)\)$/` and rebuilds
+the whole label on every state change; any new clip's chip must follow
+the same form or its label stops updating. The `prefers-reduced-motion`
+gate (no autoplay, poster shown until the visitor presses Play) is
+unchanged. `script.js` loops over every `.device-figure` — only the two
+video figures carry that class; the feature rows' screenshots sit in
+`.feature-row__device` and are never selected — so a third clip in a
+`.device-figure` needs no JS change.
 
-- `.showcase__video-card` — the minimal glass edge, per the history
-  note above. `position: relative`, `width: min(220px, 42vw)` (sized
-  for two side by side; was `min(300px, 78vw)` back when there was only
-  one), `padding: 5px` (this padding **is** the ring's thickness — the
-  video sits inset from it; don't remove it without rethinking the
-  whole ring), `border-radius: var(--radius-lg)`, `overflow: hidden`, a
-  translucent `linear-gradient(160deg, rgba(255,255,255,.55),
-  rgba(255,255,255,.05))` background, a `1px solid var(--color-border)`
-  edge, and a soft `box-shadow` (an `inset` highlight plus the standard
-  `0 30px 60px -30px var(--shadow-color)` floor shadow) — deliberately
-  no notch, no side buttons, nothing claiming a specific device model.
-  `aspect-ratio` is set per-card to that card's own recording's native
-  ratio (iPhone: `498/1080`; iPad: `720/960` — see
-  `.showcase__device:nth-child(n) .showcase__video-card` in
-  `style.css`) — match this to whatever a future recording's actual
-  dimensions are, don't assume either existing ratio applies to a third
-  device; a mismatched ratio forces `object-fit: cover` to crop the
-  footage, which is exactly the bug this design avoids by construction.
-- `.showcase__video` — the "screen" inside the ring: `width/height:
-  100%`, `object-fit: cover`, `display: block`, its own slightly
-  smaller `border-radius: calc(var(--radius-lg) - 5px)` so the ring
-  reads as a frame around it, and `background: #000` (a dark backdrop
-  before the video's first frame paints — this used to live on
-  `.showcase__video-card` back when that element was the screen itself
-  rather than the ring around it). `object-fit: cover` is a safety net
-  for a future re-recording at a slightly different ratio, not
-  something either current recording actually needs cropping from.
-- **Asset pipeline**: the iPad recording came from Unity's iOS
-  Simulator build (`Builds/iOSSimulator/.../Sliceball.app`, an
-  architecture-generic `arm64-simulator` build — installable on any
-  booted simulator device), captured via the Simulator's own screen
-  recording. The iPhone recording is genuine on-device footage (see
-  "Two-device showcase" below). Both were trimmed/compressed with
-  `ffmpeg` to a matching `-poster.webp` first-frame poster (shown while
-  the video buffers, and to `prefers-reduced-motion: reduce` visitors —
-  see below). Follow the same "record on-device or on-Simulator, trim,
-  compress, ship a matching poster" recipe for any future game's
-  showcase — never a screen-captured desktop Unity Editor session,
-  which looks nothing like the real on-device game.
-- **Privacy: screen every real-device recording before it ships.** A
-  real iPhone screen recording can carry things a Simulator recording
-  never would — a Game Center "Signed in as `<name>`" toast, a
-  notification banner, a real name in a TestFlight/App Store listing
-  screen if the recording starts there. Before trimming any raw
-  on-device recording down to a showcase clip, scan the WHOLE thing
-  (an `ffmpeg` contact-sheet — tile a grid of thumbnails at 1-4fps — is
-  fast and catches this at a glance) for anything identifying, not just
-  for a clean action window. This bit Jonathan's real-iPhone recording
-  for this pass — see "Two-device showcase" below — and the fix going
-  forward is to make this scan a standard step, not a one-off
-  after-the-fact catch.
-- **Pause control (WCAG 2.2.2)**: `.showcase__video-toggle`, an
-  absolutely-positioned circular button bottom-right of the card
-  (`rgba(0,0,0,.45)` fill, `var(--radius-full)`), toggles play/pause.
-  Required because the video auto-loops indefinitely — any auto-starting
-  motion lasting more than 5 seconds needs a visible way to stop it.
-  `script.js` wires the click handler and keeps `data-state`/
-  `aria-pressed`/`aria-label` in sync via the video's own `play`/`pause`
-  events (not a one-time synchronous `video.paused` check at script
-  load — that's unreliable because the browser's autoplay start is
-  asynchronous relative to script execution).
-- **`prefers-reduced-motion` gating**: the HTML `autoplay` attribute
-  can't itself be conditioned on a media query, so `script.js` explicitly
-  does `video.removeAttribute("autoplay"); video.pause();` when
-  `matchMedia("(prefers-reduced-motion: reduce)").matches` — those
-  visitors see the static poster image and can press play manually.
+**Store block rules (`.store-block`, both heroes).** Official Google
+badge artwork only (`assets/store/google-play-badge.png`, 60px tall,
+never recoloured/redrawn/cropped/animated — it carries its own clear
+space), a `.badge--coming-soon` for the App Store, and the QR
+(`assets/store/qr-google-play.svg`, "Scan to open it on your phone")
+pointing at the same listing. The QR is hidden on coarse-pointer devices
+and under 640px — a phone cannot scan itself. On the Sliceball hero the
+block is centred, and `.store-block__badges` is centred too so the badge
+and pill stay centred once they wrap to two lines on a phone. What
+changes when iOS ships is listed under "Launch state" in the Badges
+section above.
 
-**Ambient background glow** — `.showcase::before` (mirroring
-`.hero::before`, see the dedicated section below) adds a very subtle
-`--color-accent-soft` radial wash behind this section, `position:
-relative` on `.showcase` itself to contain it.
+**History, kept so nobody reopens it.** Before direction C this section
+was `.showcase`: two side-by-side "minimal glass edge" video cards
+(iPhone + iPad) chosen from three frame mockups, after a CSS-drawn phone
+chassis (rejected as "more mockup than the screenshots"), a plain card,
+and before that a scroll-scrubbed six-screenshot crossfade (rejected as
+"robotic"). The glass edge was the platform-neutral answer at the time;
+the generic `.device` frame is the same answer with an actual bezel, and
+Jonathan chose it explicitly. Do not bring back a notch, an island, side
+buttons, or per-brand frames.
 
-**The six screenshots didn't disappear** — they moved out of the phone
-chassis and into their own section right below, `.showcase-gallery`
-(`id="screens"`): a plain horizontally-swipeable, scroll-snap strip
-(`.showcase-gallery__strip { display:flex; overflow-x:auto; scroll-snap-type:x mandatory }`,
-each `.showcase-gallery__shot { flex:0 0 auto; width:min(220px,55vw);
-aspect-ratio:900/1955; object-fit:cover }`) — the same peek/snap pattern
-this page already used elsewhere, reused rather than inventing a new
-gallery mechanism. Each `<img>` has its own real, distinct `alt` text
-(these are now standalone informative images, not decorative chrome, so
-they are NOT `aria-hidden`) — e.g. "The Sliceball main menu", "Gameplay:
-a ball dropping onto a card stack". Source screenshots came from the
-Unity project's own `StoreAssets/` folder (real App Store/Play Store
-marketing shots — never generate placeholder/fake screenshots), resized
-to 900px wide and converted to `.webp` at quality 82 with Pillow
-(`im.save(path, "WEBP", quality=82, method=6)`); files live at
-`sliceball/assets/showcase/showcase-NN-name.webp`. Follow this same
-resize+webp recipe, and the same real/distinct-`alt`-text rule, for any
-future game's gallery strip.
+**Asset pipeline (still applies).** The tablet recording came from
+Unity's iOS Simulator build, captured with the Simulator's own screen
+recording; the phone recording is genuine on-device footage. Both were
+trimmed/compressed with `ffmpeg` to a matching `-poster.webp` first
+frame. **Screen every real-device recording frame-by-frame before it
+ships** (an `ffmpeg` contact sheet at 1–4fps) for Game Center
+"Signed in as <name>" toasts, notification banners, or a real name —
+this caught two separate exposures on this page (see "Current status").
+Screenshots are the `StoreAssets/` store shots resized to 900px wide,
+`.webp` quality 82, with the island cropped off the top (72px) as
+`screen-NN-name.webp`; never generate placeholder/fake screenshots.
 
-## Ambient background glow (`.hero::before`, `.showcase::before`)
+## Ambient background glow (`.hero::before`)
 
-A very subtle radial-gradient wash sitting behind the hero and the
-showcase section, added as part of the "make the page brighter/more
-inviting, like apple.com" pass. Both sections get `position: relative`
-and a `::before` pseudo-element:
+A very subtle radial-gradient wash sitting behind the hero, added as
+part of the "make the page brighter/more inviting, like apple.com"
+pass. (The Sliceball page's old `.showcase::before` copy of it went
+with that section on 2026-09-13; the grey `.story-tablet` band carries
+no glow.) The section gets `position: relative` and a `::before`
+pseudo-element:
 
 ```css
-.hero::before, .showcase::before {
+.hero::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -836,23 +866,24 @@ gets this for free — don't re-style them individually.
 `sliceball/support/index.html` all exist now and are live at the paths
 `index.html`'s footer/nav already pointed at. The Sliceball page has
 gone through several rounds of real-content passes since the v1 layout
-this spec originally described (see `.showcase`'s history note above)
-— it's no longer a placeholder page.
+this spec originally described (see the history note under "Sliceball
+page" above) — it's no longer a placeholder page.
 
-**Two-device showcase, built:** `.showcase__stage` now holds two
-`.showcase__device` cards side by side (iPhone + iPad), each with its
-own labeled `.showcase__video-card` — see `.showcase`'s markup example
-above and `.showcase__stage`/`.showcase__device`
-in `style.css`. The iPad card (`gameplay-ipad.mp4`,
-`aspect-ratio: 720/960`) is a fresh iPad Simulator recording, genuinely
-at default state (`CASH $0`, `Level 1`, no shop purchases) — this is
-what Jonathan asked for when he flagged that a different clip looked
-"upgraded": the default ball and note-card stack, not a purchased skin.
-`script.js`'s video/pause logic loops over every `.showcase__video-card`
-on the page independently (see its own top comment), so a future third
-device card needs no JS change.
+**Sliceball page rebuilt as direction C · "Story" (2026-09-13):** centred
+hero with the shared `.store-block` and one generic-framed phone clip
+hanging 200px (140px on phones) into a grey tablet band, then three
+alternating feature rows using the three island-free screenshots. The
+two-video `.showcase`, the `#screens` strip and the `#how-it-works`
+cards are gone (markup and CSS); the pause control moved from an
+overlay glyph to a chip under each device; `script.js` now drives
+`.device-figure`/`.video-toggle`. Verified in WebKit and Chrome at 1280
+and 375 — see the "Sliceball page" section for the numbers. The tablet
+clip (`gameplay-ipad.mp4`, 720×960) is the iPad Simulator recording at
+genuine default state (`CASH $0`, `Level 1`, no shop purchases) — what
+Jonathan asked for when he flagged that a different clip looked
+"upgraded".
 
-The iPhone card's asset went through its own incident worth recording
+The phone clip's asset went through its own incident worth recording
 in full, because it changes what this clip is FOR:
 
 1. The original iPhone recording was genuine footage from an actual
@@ -861,7 +892,7 @@ in full, because it changes what this clip is FOR:
    original ask for this to look like "a real phone playing the game."
    It showed `CASH $10`, `Level 5`, and a purchased ball/stack skin —
    Jonathan pointed out this was an upgraded/purchased look, not the
-   default new-player state the showcase should lead with.
+   default new-player state the page should lead with.
 2. Separately, a full-recording scan (see the "Privacy" note above,
    added *because of* this) turned up a Game Center "Signed in as
    `<name>`" toast baked into the raw footage from roughly t=2.75s to
@@ -875,7 +906,7 @@ in full, because it changes what this clip is FOR:
    scan) through its original end, re-encoded, and a new poster
    generated from its new first frame. This trimmed, safe version is
    what `gameplay-iphone.mp4` / `gameplay-iphone-poster.webp` are now —
-   it's live in the primary showcase card as a placeholder. The original
+   it's live in the hero phone as a placeholder. The original
    exposed file was never deleted (per the "never delete without
    approval" rule) — it's sitting in `_to_delete/` named
    `gameplay-iphone-original-exposed-gamecenter-username.mp4`, and
@@ -910,7 +941,7 @@ in full, because it changes what this clip is FOR:
    before shipping it. This is now `gameplay-iphone.mp4` /
    `gameplay-iphone-poster.webp`: genuine default-state gameplay (default
    ball/stack, no purchased skin), recorded on actual iPhone hardware,
-   matching the iPad card's default-state treatment. The previous
+   matching the tablet clip's default-state treatment. The previous
    upgraded-skin placeholder was not deleted — it's backed up in
    `sliceball/assets/showcase/_to_delete/` as
    `gameplay-iphone-placeholder-upgraded-skin-backup.mp4` (and matching
@@ -928,8 +959,21 @@ homepage card badge/platforms, and the Sliceball hero actions now say
 Android is out and iOS is coming soon — see the "Launch state" note
 under Badges for exactly what changes again when Apple approves.
 
+**Homepage hero: official Play badge + QR, generic phone frame
+(2026-09-13, "direction C"):** the hero's green "Get Sliceball on Google
+Play" button became the shared `.store-block` (Google's badge artwork
+from `assets/store/`, "Get help" beside it, QR on its own row), and the
+featured card's glass-ring screenshot became the shared `.device--phone`
+frame at 180px holding the island-free `screen-03-slicing.webp`.
+`.app-card__shot` was removed from `style.css`; the old
+`showcase-03-slicing.webp` is still on disk, just unreferenced by the
+homepage. Copy, help strip, About, Contact and footer are unchanged.
+Verified in WebKit and Chrome at 1280 and 375 (no horizontal overflow,
+frame centred in the visual, screenshot ratio uncropped). See
+"Storefront hero" and the `.app-card` rules above.
+
 **Known pending / left behind, not yet resolved:**
-- ~~The primary iPhone showcase card still needs real default-state
+- ~~The hero phone clip still needs real default-state
   footage~~ — **resolved**, see point 5 above: genuine default-state
   footage recorded on actual iPhone hardware is now live as
   `gameplay-iphone.mp4`. The `gameplay-iphone-earn.mp4` asset from point

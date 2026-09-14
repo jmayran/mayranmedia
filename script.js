@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Mayran Media — scroll reveal + Sliceball showcase video control
+   Mayran Media — scroll reveal + Sliceball gameplay video control
    --------------------------------------------------------------------------
    Two small, independent pieces of JS on this site (each its own IIFE
    below, each a no-op if the elements it looks for aren't on the page):
@@ -15,13 +15,12 @@
       transition ever fires for them even if a future style change forgets
       the CSS fallback.
 
-   2. Gates the Sliceball showcase's autoplaying gameplay video(s) behind
+   2. Gates the Sliceball page's autoplaying gameplay video(s) behind
       `prefers-reduced-motion` and wires up each one's own pause/play
-      toggle button. See that block below for why. There are two
-      independent video/toggle pairs on the page now (two clips
-      cards, side by side) -- this loops over however many
-      `.showcase__video-card`s it finds, so a third device card someday
-      needs no JS change at all.
+      toggle chip. See that block below for why. There are two
+      independent video/toggle pairs on the page (the hero phone and
+      the tablet band) -- this loops over however many `.device-figure`s
+      hold a <video>, so a third clip someday needs no JS change at all.
    ========================================================================== */
 (function () {
   "use strict";
@@ -90,7 +89,7 @@
 
 
 /* ==========================================================================
-   Sliceball showcase video(s) — reduced motion + pause control
+   Sliceball gameplay video(s) — reduced motion + pause control
    --------------------------------------------------------------------------
    The `<video>` markup itself is unconditionally `autoplay muted loop
    playsinline` (see sliceball/index.html) — HTML attributes can't check a
@@ -103,28 +102,39 @@
    Separately, since each clip loops indefinitely once playing, it also
    needs a visible way to stop it (WCAG 2.2.2, Pause/Stop/Hide applies to
    any auto-starting motion lasting more than 5 seconds) — that's the
-   `.showcase__video-toggle` button, wired up here.
+   `.video-toggle` chip under each device, wired up here. The chip's
+   visible text and glyph (pause/play variants) are swapped purely by
+   CSS off `data-state`, so this script only flips attributes.
 
-   The showcase now has two independent, deliberately unlabeled clips
-   (no device names — Jonathan wants it generic across phones/tablets),
-   each its own `.showcase__video-card` containing one `<video
-   class="showcase__video">` and one `.showcase__video-toggle` sibling —
-   this loops over every `.showcase__video-card` and wires each pair up
-   completely independently (pausing one never touches the other).
+   Each clip lives in its own `.device-figure`: a `.device` holding one
+   `<video class="device__screen">`, then a `.video-toggle` sibling. Only
+   the two video figures (hero phone, tablet band) carry that class — the
+   feature rows' screenshots sit in `.feature-row__device`, which this
+   never selects — and each pair is wired up completely independently
+   (pausing one never touches the other). The `if (!video || !toggle)`
+   guard is just defence against a future figure without a clip.
+
+   The toggle's aria-label must stay in the form
+   "Pause video (<qualifier>)" / "Play video (<qualifier>)": the visible
+   chip text ("Pause video" / "Play video") has to be a prefix of the
+   accessible name (WCAG 2.5.3 Label in Name, so a speech-control user
+   saying "click Pause video" hits it), and the qualifier that tells the
+   two chips apart goes in parentheses after it. The qualifier is parsed
+   out below and the whole label rebuilt on every state change.
    ========================================================================== */
 (function () {
   "use strict";
 
-  var cards = document.querySelectorAll(".showcase__video-card");
-  if (!cards.length) return;
+  var figures = document.querySelectorAll(".device-figure");
+  if (!figures.length) return;
 
   var prefersReducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  cards.forEach(function (card) {
-    var video = card.querySelector(".showcase__video");
-    var toggle = card.querySelector(".showcase__video-toggle");
+  figures.forEach(function (figure) {
+    var video = figure.querySelector("video.device__screen");
+    var toggle = figure.querySelector(".video-toggle");
     if (!video || !toggle) return;
 
     function setToggleState(isPlaying) {
@@ -132,15 +142,15 @@
       toggle.setAttribute("aria-pressed", isPlaying ? "true" : "false");
       toggle.setAttribute(
         "aria-label",
-        (isPlaying ? "Pause " : "Play ") + toggle.dataset.label + " gameplay video"
+        (isPlaying ? "Pause" : "Play") + " video (" + toggle.dataset.label + ")"
       );
     }
-    // Remember this toggle's own distinguishing word (from its initial
-    // aria-label, e.g. "Pause first gameplay video" -> "first") so setToggleState can
-    // rebuild an accurate label after every play/pause without hardcoding
-    // "gameplay" text per-card here.
+    // Remember this toggle's own qualifier (from its initial aria-label,
+    // e.g. "Pause video (phone gameplay)" -> "phone gameplay") so
+    // setToggleState can rebuild an accurate label after every play/pause
+    // without hardcoding per-figure text here.
     var initialLabel = toggle.getAttribute("aria-label") || "";
-    var labelMatch = initialLabel.match(/^(?:Pause|Play) (.+) gameplay video$/);
+    var labelMatch = initialLabel.match(/^(?:Pause|Play) video \((.+)\)$/);
     toggle.dataset.label = labelMatch ? labelMatch[1] : "";
 
     if (prefersReducedMotion) {

@@ -22,50 +22,6 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%2314663a'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../style.css">
-<style>
-  /* ------------------------------------------------------------------
-     Page-scoped additions for the Sliceball product page only. These
-     build strictly on existing tokens (no new hex colors) and existing
-     component shapes (.contact-card's box treatment, .sliceball-scene's
-     sizing hook) — kept local to this page rather than added to the
-     shared style.css so this page doesn't need a coordinated edit to a
-     file another in-progress page may also be touching. If a second
-     game page ever needs the same "steps" pattern, promote these rules
-     into style.css under the same class names — see DESIGN-SPEC.md.
-     Contrast of the two new pairings introduced here (--color-accent and
-     --color-text-secondary against --color-bg-elevated) was computed,
-     not eyeballed: accent-on-elevated is 6.45:1 (light) / 5.39:1 (dark);
-     secondary-on-elevated is 4.64:1 (light) / 5.93:1 (dark) — all clear
-     the 4.5:1 AA body-text bar. No hardcoded hex values are used below.
-     ------------------------------------------------------------------ */
-  .steps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: var(--space-lg);
-    margin-top: var(--space-2xl);
-  }
-  .step-card {
-    padding: var(--space-lg);
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-  }
-  .step-card__index {
-    display: block;
-    font-family: var(--font-text);
-    font-size: var(--text-small);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--color-accent);
-    margin-bottom: var(--space-2xs);
-  }
-  .step-card h3 {
-    margin-bottom: var(--space-2xs);
-  }
-  .step-card p {
-    color: var(--color-text-secondary);
-  }
-</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -76,7 +32,7 @@
     <nav class="site-nav" aria-label="Primary">
       <ul>
         <li><a href="../">Home</a></li>
-        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#features">How it works</a></li>
         <li><a href="support/">Support</a></li>
         <li><a href="privacy/">Privacy</a></li>
       </ul>
@@ -86,108 +42,123 @@
 
 <main id="main">
 
-  <!-- ============================= HERO ============================= -->
-  <section class="hero" id="top">
+  <!-- ============================= HERO =============================
+       Direction C ("Story"), chosen by Jonathan 2026-09-13 from three
+       mockups. Centered copy + the store block, then ONE phone playing
+       real footage that hangs down over the grey section below it. The
+       phone (`.hero__device`) is a SIBLING of `.hero__content`, not a
+       child: the hero-parallax fade in style.css targets `.hero__content`
+       and must never dim the footage (same rule as the homepage's
+       featured card - see DESIGN-SPEC.md "Storefront hero"). -->
+  <section class="hero hero--story" id="top">
     <div class="container">
       <div class="hero__content reveal-group">
         <p class="eyebrow reveal">A Mayran Media game</p>
         <h1 class="reveal">Sliceball</h1>
         <p class="hero__lead text-body-lg reveal">
-          Time your slices, drop the ball, clear the level.
+          One slice at a time. Hold to slice, release to drop the ball, clear the level.
         </p>
-        <div class="hero__actions reveal">
-          <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball" rel="noopener">Get it on Google Play</a>
-          <span class="badge badge--coming-soon">App Store · Coming soon</span>
+        <div class="store-block reveal">
+          <div class="store-block__badges">
+            <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball" rel="noopener"><img src="../assets/store/google-play-badge.png" alt="Get it on Google Play" width="646" height="250"></a>
+            <span class="badge badge--coming-soon">App Store · Coming soon</span>
+          </div>
+          <a class="store-block__qr" href="https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball" rel="noopener"><img src="../assets/store/qr-google-play.svg" alt="QR code: Sliceball on Google Play" width="164" height="164"><span>Scan to open it on your phone</span></a>
         </div>
       </div>
 
+      <!-- Real phone footage in the generic phone frame. The pause chip
+           sits UNDER the device on purpose: the game's own pause button
+           is visible in the footage, so a glyph overlaid on the screen
+           read as a duplicate control. -->
+      <div class="device-figure hero__device reveal" id="showcase">
+        <div class="device device--phone">
+          <video class="device__screen" width="444" height="960" autoplay muted loop playsinline poster="assets/showcase/gameplay-iphone-poster.webp" aria-label="Real Sliceball gameplay: slicing down through a stack and clearing the level."><source src="assets/showcase/gameplay-iphone.mp4" type="video/mp4"></video>
+        </div>
+        <button type="button" class="video-toggle" data-state="playing" aria-pressed="true" aria-label="Pause video (phone gameplay)">
+          <span class="video-toggle__icon video-toggle__icon--pause" aria-hidden="true"></span>
+          <span class="video-toggle__icon video-toggle__icon--play" aria-hidden="true"></span>
+          <span class="video-toggle__text video-toggle__text--pause" aria-hidden="true">Pause video</span>
+          <span class="video-toggle__text video-toggle__text--play" aria-hidden="true">Play video</span>
+        </button>
+      </div>
     </div>
   </section>
 
-  <!-- ============================ SHOWCASE ============================ -->
-  <section class="section showcase" id="showcase">
-    <div class="container showcase__grid">
-      <div class="showcase__copy reveal-group">
-        <p class="eyebrow reveal">See it in action</p>
-        <h2 class="reveal">Real gameplay, not a mockup.</h2>
-        <ul class="showcase__list reveal">
-          <li>Start at the menu, tap Play.</li>
-          <li>Time the slice as the ball drops.</li>
-          <li>Clear the stack — or don't.</li>
-          <li>Spend what you earn on new balls in the shop.</li>
-          <li>Unlock new skins and slice trails as you go.</li>
-        </ul>
+  <!-- ============================= TABLET =============================
+       Grey band the hero phone overlaps into (`.story-tablet` carries the
+       overlap spacer in its top padding). Copy left, tablet right;
+       stacks copy-first and centered at 800px and below. -->
+  <section class="story-tablet" id="tablet">
+    <div class="container story-tablet__grid">
+      <div class="story-tablet__copy reveal-group">
+        <p class="eyebrow reveal">Bigger screen</p>
+        <h2 class="reveal">Made for the tablet on the couch, too.</h2>
+        <p class="text-body-lg reveal">Same game, same one-finger control. The stack just gets a lot bigger.</p>
+        <div class="story-tablet__pills reveal">
+          <span class="badge">Android tablets · Out now</span>
+          <span class="badge badge--coming-soon">iPad · Coming soon</span>
+        </div>
       </div>
-      <div class="showcase__stage reveal">
-        <div class="showcase__device">
-          <div class="showcase__video-card">
-            <video class="showcase__video" autoplay muted loop playsinline poster="assets/showcase/gameplay-iphone-poster.webp" aria-label="Real Sliceball gameplay: slicing down through a stack and clearing the level.">
-              <source src="assets/showcase/gameplay-iphone.mp4" type="video/mp4">
-            </video>
-            <button type="button" class="showcase__video-toggle" data-state="playing" aria-pressed="true" aria-label="Pause first gameplay video">
-              <span class="showcase__video-toggle-icon showcase__video-toggle-icon--pause" aria-hidden="true"></span>
-              <span class="showcase__video-toggle-icon showcase__video-toggle-icon--play" aria-hidden="true"></span>
-            </button>
+      <div class="device-figure story-tablet__device reveal">
+        <div class="device device--tablet">
+          <video class="device__screen" width="720" height="960" autoplay muted loop playsinline poster="assets/showcase/gameplay-ipad-poster.webp" aria-label="Real Sliceball gameplay on a tablet: a second run, slicing down through a stack."><source src="assets/showcase/gameplay-ipad.mp4" type="video/mp4"></video>
+        </div>
+        <button type="button" class="video-toggle" data-state="playing" aria-pressed="true" aria-label="Pause video (tablet gameplay)">
+          <span class="video-toggle__icon video-toggle__icon--pause" aria-hidden="true"></span>
+          <span class="video-toggle__icon video-toggle__icon--play" aria-hidden="true"></span>
+          <span class="video-toggle__text video-toggle__text--pause" aria-hidden="true">Pause video</span>
+          <span class="video-toggle__text video-toggle__text--play" aria-hidden="true">Play video</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FEATURES ============================
+       Three alternating rows (text | phone, phone | text, text | phone)
+       telling the game in order: slice, time it, spend. Replaces both the
+       old "More screens" strip and the "How it works" card grid. The
+       alternation is done with CSS `order`, so the DOM stays text-first
+       in every row for screen readers and keyboard users. Only the three
+       screen-NN-*.webp shots (island cropped off) are used here. -->
+  <section class="section feature-rows" id="features">
+    <div class="container">
+      <article class="feature-row reveal">
+        <div class="feature-row__copy">
+          <span class="feature-row__index" aria-hidden="true">01</span>
+          <h2>Slice through the stack.</h2>
+          <p class="text-body-lg">Cards hold the ball above the danger below. Hold to start the slice, and let go at exactly the right height.</p>
+        </div>
+        <div class="feature-row__device">
+          <div class="device device--phone">
+            <img class="device__screen" src="assets/showcase/screen-03-slicing.webp" alt="The slicing moment, right as the ball meets the stack" width="900" height="1883" loading="lazy" decoding="async">
           </div>
         </div>
-        <div class="showcase__device">
-          <div class="showcase__video-card">
-            <video class="showcase__video" autoplay muted loop playsinline poster="assets/showcase/gameplay-ipad-poster.webp" aria-label="Real Sliceball gameplay: a second run, slicing down through a stack.">
-              <source src="assets/showcase/gameplay-ipad.mp4" type="video/mp4">
-            </video>
-            <button type="button" class="showcase__video-toggle" data-state="playing" aria-pressed="true" aria-label="Pause second gameplay video">
-              <span class="showcase__video-toggle-icon showcase__video-toggle-icon--pause" aria-hidden="true"></span>
-              <span class="showcase__video-toggle-icon showcase__video-toggle-icon--play" aria-hidden="true"></span>
-            </button>
+      </article>
+      <article class="feature-row reveal">
+        <div class="feature-row__copy">
+          <span class="feature-row__index" aria-hidden="true">02</span>
+          <h2>Time it right and the ball drops clean.</h2>
+          <p class="text-body-lg">Every level tightens the window. Mistime it and the run is over. Restarting takes one tap.</p>
+        </div>
+        <div class="feature-row__device">
+          <div class="device device--phone">
+            <img class="device__screen" src="assets/showcase/screen-02-gameplay.webp" alt="Gameplay: a ball dropping onto a card stack" width="900" height="1883" loading="lazy" decoding="async">
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================= MORE SCREENS GALLERY ======================= -->
-  <section class="section showcase-gallery" id="screens">
-    <div class="container">
-      <div class="section-header reveal">
-        <p class="eyebrow">More screens</p>
-        <h2>Every screen, at a glance.</h2>
-      </div>
-      <div class="showcase-gallery__strip reveal">
-        <img class="showcase-gallery__shot" src="assets/showcase/showcase-01-menu.webp" alt="The Sliceball main menu" width="900" height="1955" loading="lazy" decoding="async">
-        <img class="showcase-gallery__shot" src="assets/showcase/showcase-02-gameplay.webp" alt="Gameplay: a ball dropping onto a card stack" width="900" height="1955" loading="lazy" decoding="async">
-        <img class="showcase-gallery__shot" src="assets/showcase/showcase-03-slicing.webp" alt="The slicing moment, right as the ball meets the stack" width="900" height="1955" loading="lazy" decoding="async">
-        <img class="showcase-gallery__shot" src="assets/showcase/showcase-04-howtoplay.webp" alt="The how-to-play screen: hold to slice, release at the right height to drop the ball" width="900" height="1955" loading="lazy" decoding="async">
-        <img class="showcase-gallery__shot" src="assets/showcase/showcase-05-shop-balls.webp" alt="Choosing a new ball skin in the shop" width="900" height="1955" loading="lazy" decoding="async">
-        <img class="showcase-gallery__shot" src="assets/showcase/showcase-06-shop-slices.webp" alt="Choosing a new slice trail in the shop" width="900" height="1955" loading="lazy" decoding="async">
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================== HOW IT WORKS ========================== -->
-  <section class="section" id="how-it-works">
-    <div class="container">
-      <div class="section-header reveal">
-        <p class="eyebrow">How it works</p>
-        <h2>Slice. Fall. Unlock.</h2>
-      </div>
-
-      <div class="steps-grid reveal">
-        <div class="step-card">
-          <span class="step-card__index">01</span>
-          <h3>Slice</h3>
-          <p>Stacks of cards hold the ball above the danger below. Slice through them at exactly the right moment.</p>
+      </article>
+      <article class="feature-row reveal">
+        <div class="feature-row__copy">
+          <span class="feature-row__index" aria-hidden="true">03</span>
+          <h2>Spend what you earn.</h2>
+          <p class="text-body-lg">Coins from each run unlock new balls and slice trails in the shop. Cosmetic only, and nothing to buy.</p>
         </div>
-        <div class="step-card">
-          <span class="step-card__index">02</span>
-          <h3>Fall</h3>
-          <p>Time it right and the ball falls clean to the next level. Mistime it, and the run is over.</p>
+        <div class="feature-row__device">
+          <div class="device device--phone">
+            <img class="device__screen" src="assets/showcase/screen-05-shop-balls.webp" alt="Choosing a new ball skin in the shop" width="900" height="1883" loading="lazy" decoding="async">
+          </div>
         </div>
-        <div class="step-card">
-          <span class="step-card__index">03</span>
-          <h3>Unlock</h3>
-          <p>Levels get tighter as you go. Coins earned along the way unlock new balls to play with.</p>
-        </div>
-      </div>
+      </article>
     </div>
   </section>
 

@@ -205,17 +205,20 @@ the homepage `.app-card` carries a plain `.badge` reading "Out now" with
 official "Get it on Google Play" badge (`assets/store/google-play-badge.png`,
 linking straight to `https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball`)
 beside a `.badge--coming-soon` reading "App Store · Coming soon", and a
-QR code for the same listing. The Sliceball tablet band adds a plain
-`.badge` "Android tablets · Out now" and a `.badge--coming-soon`
-"iPad · Coming soon". **When iOS is approved:** add Apple's official
-App Store badge FIRST in `.store-block__badges` (Apple's placement
-rule) at the same 60px height (Google's "never smaller than the App
-Store badge" rule), drop both coming-soon pills (the tablet band's
-becomes a plain `.badge` "iPad · Out now" or goes away), point the QR at
-a device-aware link rather than one store, change the card's platforms
-text to "iOS · Android", and update the footer line and both meta
-descriptions, which currently read "out now on Android, coming soon to
-iOS" on every page.
+QR code for the same listing. The Sliceball tablet band adds a single
+`.badge--coming-soon` "iPad · Coming soon" — there is no Android-tablet
+pill: the game isn't offered as a tablet experience on Android, only on
+iPad, so the band only ever talks about iPad (Jonathan, 2026-09-13: "its
+only available for ipad tablets"). **When iOS is approved:** add
+Apple's official App Store badge FIRST in `.store-block__badges`
+(Apple's placement rule) at the same 60px height (Google's "never
+smaller than the App Store badge" rule), drop the hero's coming-soon
+pill and swap the tablet band's to a plain `.badge` "iPad · Out now" (or
+remove it if the tablet story no longer needs its own pill), point the
+QR at a device-aware link rather than one store, change the card's
+platforms text to "iOS · Android", and update the footer line and both
+meta descriptions, which currently read "out now on Android, coming
+soon to iOS" on every page.
 
 ## `.reveal` — scroll reveal utility
 
@@ -583,8 +586,9 @@ The page is, top to bottom:
    `1fr` | tablet `1.1fr`), copy-first single column and centred at 800px
    and below. Copy: eyebrow "Bigger screen", H2 "Made for the tablet on
    the couch, too.", one `.text-body-lg` line, and `.story-tablet__pills`
-   (plain `.badge` "Android tablets · Out now", `.badge--coming-soon`
-   "iPad · Coming soon"). Tablet: `.device-figure.story-tablet__device` >
+   holding a single `.badge--coming-soon` "iPad · Coming soon" — no
+   Android-tablet pill; the game has no tablet-specific experience on
+   Android, only on iPad. Tablet: `.device-figure.story-tablet__device` >
    `.device--tablet` at `--device-w: min(520px, 100%)` (percentage, not
    vw — at 1280 the grid column is ~500px and a fixed 520px spilled into
    the gutter) with its own pause chip.

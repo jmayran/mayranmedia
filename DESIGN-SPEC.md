@@ -210,19 +210,33 @@ the App Store" FIRST (`assets/store/apple-app-store-badge.svg`, Apple's
 placement rule; pulled from Apple's own badge-generator endpoint,
 `tools.applemediaservices.com`, with Jonathan's OK, 2026-09-15;
 unmodified, same as the Play badge rule), then Google's Play badge, both
-at the shared 60px `.store-badge img` height — **and two `.store-block__qr`
-elements**, one per store, each with its own caption ("Scan for the App
-Store" / "Scan for Google Play"). The one-QR "device-aware link" idea
-noted in the previous version of this section was **not built** —
-building a UA-sniffing redirect page was bigger scope than "match the
-Android badge/QR treatment," which is what was actually asked for, and
-Apple's own marketing guidelines say the App Store badge should link
-straight to the listing, not through a redirector. Two side-by-side QR
-codes turned out to look fine (`.store-block`'s existing `flex-wrap` +
-`.store-block__qr`'s own left-divider styling handled it with zero CSS
-changes — see the Sliceball page screenshots from 2026-09-15 if this
-ever needs re-litigating). If a real device-aware smart link is wanted
-later, that's a separate, bigger task. The Sliceball tablet band's pill
+at the shared 60px `.store-badge img` height. Both are OTHER COMPANIES'
+artwork and are sized by height only, never stretched to match width —
+their designs are different aspect ratios by nature (measured: Apple's
+badge renders ~179px wide, Google's ~155px, both exactly 60px tall).
+Matching by height is what both companies' own guidelines actually call
+for; forcing equal width would distort one of the two trademarked badges,
+so that was **not** done even though it was asked about (2026-09-15) —
+explained on the call rather than silently applied.
+
+Each badge sits in its own `.store-block__store` group directly beside
+that store's own QR code (`.store-block__store` = badge + `.store-block__qr`,
+divider between the two GROUPS via `.store-block__store + .store-block__store`,
+not between badge and QR). **This replaced an earlier layout** (one row
+of both badges, a separate row of both QR codes below) that Jonathan
+flagged same-day as ambiguous — a visitor couldn't tell which QR opened
+which store. Fitting two full groups on one line at desktop widths
+needed `.hero--story .hero__content`'s `max-width` bumped from the base
+840px to 900px (two groups measure ~831px plus their gap, a hair over
+840); h1/lead stay centred and short regardless of the extra width, so
+this doesn't affect their readability. The one-QR "device-aware link"
+idea noted in an earlier version of this section was **not built** —
+a UA-sniffing redirect page is bigger scope than "match the Android
+badge/QR treatment, one QR per badge," which is what was actually asked
+for, and Apple's own marketing guidelines say the App Store badge should
+link straight to the listing, not through a redirector. If a real
+device-aware smart link is wanted later, that's a separate, bigger task.
+The Sliceball tablet band's pill
 is now a plain `.badge` "iPad · Out now" (no longer `.badge--coming-soon`)
 since the live App Store listing confirms iPad support — there is still
 no Android-tablet pill (the game isn't offered as a tablet experience on
@@ -741,17 +755,20 @@ video figures carry that class; the feature rows' screenshots sit in
 `.feature-row__device` and are never selected — so a third clip in a
 `.device-figure` needs no JS change.
 
-**Store block rules (`.store-block`, both heroes).** Official Google
-badge artwork only (`assets/store/google-play-badge.png`, 60px tall,
-never recoloured/redrawn/cropped/animated — it carries its own clear
-space), a `.badge--coming-soon` for the App Store, and the QR
-(`assets/store/qr-google-play.svg`, "Scan to open it on your phone")
-pointing at the same listing. The QR is hidden on coarse-pointer devices
-and under 640px — a phone cannot scan itself. On the Sliceball hero the
-block is centred, and `.store-block__badges` is centred too so the badge
-and pill stay centred once they wrap to two lines on a phone. What
-changes when iOS ships is listed under "Launch state" in the Badges
-section above.
+**Store block rules (`.store-block`, both heroes).** Official badge
+artwork only — Google's (`assets/store/google-play-badge.png`) and
+Apple's (`assets/store/apple-app-store-badge.svg`), both 60px tall,
+never recoloured/redrawn/cropped/stretched/animated, Apple's placed
+first (its own placement rule) — each paired with its own QR
+(`assets/store/qr-app-store.svg` / `qr-google-play.svg`) in one
+`.store-block__store` group per store, so it's unambiguous which QR
+opens which listing. Both QRs are hidden on coarse-pointer devices and
+under 640px — a phone cannot scan itself; only the two badges (and their
+divider) remain at that point. On the Sliceball hero the block is
+centred; `.hero--story .hero__content` widens to 900px (from the base
+840px) so both full groups fit on one line at desktop widths. Full
+detail, including the earlier one-row-of-badges/one-row-of-QRs layout
+this replaced, is under "Launch state" in the Badges section above.
 
 **History, kept so nobody reopens it.** Before direction C this section
 was `.showcase`: two side-by-side "minimal glass edge" video cards

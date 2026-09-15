@@ -482,12 +482,6 @@ a.link-cta {
      not force the wrap. */
   flex-basis: 100%;
 }
-.hero--storefront .store-block__qr {
-  /* No hanging left divider on its own row — the divider only makes
-     sense beside the badges, as on the Sliceball page's full-width hero. */
-  padding-left: 0;
-  border-left: 0;
-}
 .hero__featured {
   display: flex;
   justify-content: flex-end;
@@ -774,26 +768,39 @@ a.link-cta {
   background: #000;
 }
 
-/* ---- Store block (Play badge + iOS status + QR) -------------------------
-   The primary call to action on both pages. The Google Play badge is
-   Google's OWN artwork (assets/store/google-play-badge.png, downloaded
-   from play.google.com/intl/en_us/badges with Jonathan's OK, 2026-09-13)
-   and must not be recoloured, re-drawn, cropped or animated. The PNG
-   already carries its own clear space, so no extra padding is needed;
-   at 60px tall the badge itself is ~46px, above Google's 40px minimum.
-   The QR code (assets/store/qr-google-play.svg) points at the same Play
-   listing and is hidden on coarse-pointer devices (a phone or tablet in
-   the hand cannot usefully scan itself) and at narrow widths.
-   When the App Store listing goes live: add its official badge FIRST in
-   `.store-block__badges` (Apple's rule), keep the Play badge the same
-   size or larger (Google's rule), replace the coming-soon pill, and
-   point the QR at a device-aware link rather than one store.
+/* ---- Store block (badges + QR) -----------------------------------------
+   The primary call to action on the Sliceball page (and, pre-launch, a
+   plain badge + button on the homepage's Skim card — see
+   `.store-block__badges` below). Google's Play badge
+   (assets/store/google-play-badge.png, downloaded from
+   play.google.com/intl/en_us/badges with Jonathan's OK, 2026-09-13) and
+   Apple's App Store badge (assets/store/apple-app-store-badge.svg, pulled
+   from Apple's own badge-generator endpoint with his OK, 2026-09-15) are
+   each OTHER COMPANIES' artwork and must never be recoloured, re-drawn,
+   cropped, stretched, or animated — both are sized by height only
+   (`.store-badge img { height: 60px }`), never forced to a matching
+   width, since their own designs are different aspect ratios by nature
+   (measured 2026-09-15: Apple's badge renders ~179px wide, Google's
+   ~155px, both exactly 60px tall — matching by height is what both
+   companies' own guidelines actually call for, not matching by width).
+
+   Since 2026-09-15 (two stores live) each store gets its own
+   `.store-block__store` — badge directly beside ITS OWN QR code, so it's
+   unambiguous which QR opens which store (Jonathan flagged the earlier
+   layout, one row of badges above a separate row of QR codes, as
+   ambiguous). The divider that used to sit before each QR now sits
+   BETWEEN store groups instead (`.store-block__store + .store-block__store`).
+   Each QR (assets/store/qr-app-store.svg, qr-google-play.svg) points at
+   that same store's listing and is hidden on coarse-pointer devices and
+   at narrow widths (a phone/tablet in the hand cannot usefully scan
+   itself) — at that point only the two badges remain, still visually
+   separated by the same divider.
    ---------------------------------------------------------------------- */
 .store-block {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 .store-block__badges {
   display: flex;
@@ -810,12 +817,19 @@ a.link-cta {
   height: 60px;
   width: auto;
 }
+.store-block__store {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.store-block__store + .store-block__store {
+  padding-left: var(--space-md);
+  border-left: 1px solid var(--color-border);
+}
 .store-block__qr {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  padding-left: var(--space-md);
-  border-left: 1px solid var(--color-border);
   font-size: var(--text-small);
   line-height: 1.4;
   color: var(--color-text-secondary);
@@ -1163,6 +1177,12 @@ a.link-cta {
 }
 .hero--story .hero__content {
   margin-inline: auto;
+  /* Wide enough for two full store-block__store groups (badge + its own
+     QR, both stores) on one line at desktop widths — two groups measure
+     ~831px plus their gap, a hair over the base 840px cap, which forced
+     an unwanted line-wrap (2026-09-15). h1/lead stay centred and short
+     either way, so the extra width doesn't hurt their readability. */
+  max-width: 900px;
 }
 .hero--story h1,
 .hero--story .hero__lead {

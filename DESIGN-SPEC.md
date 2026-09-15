@@ -198,27 +198,44 @@ a big stat number).
   ships, swap to a plain `.badge` (or drop the badge) rather than
   inventing a new class.
 
-**Launch state as of 2026-09-13 (Android live, iOS still in review):**
-the homepage `.app-card` carries a plain `.badge` reading "Out now" with
-`.app-card__platforms` reading "Android · iOS coming soon". Both heroes
-(homepage and Sliceball) carry the shared `.store-block`: Google's
-official "Get it on Google Play" badge (`assets/store/google-play-badge.png`,
-linking straight to `https://play.google.com/store/apps/details?id=com.mayranmedia.sliceball`)
-beside a `.badge--coming-soon` reading "App Store · Coming soon", and a
-QR code for the same listing. The Sliceball tablet band adds a single
-`.badge--coming-soon` "iPad · Coming soon" — there is no Android-tablet
-pill: the game isn't offered as a tablet experience on Android, only on
-iPad, so the band only ever talks about iPad (Jonathan, 2026-09-13: "its
-only available for ipad tablets"). **When iOS is approved:** add
-Apple's official App Store badge FIRST in `.store-block__badges`
-(Apple's placement rule) at the same 60px height (Google's "never
-smaller than the App Store badge" rule), drop the hero's coming-soon
-pill and swap the tablet band's to a plain `.badge` "iPad · Out now" (or
-remove it if the tablet story no longer needs its own pill), point the
-QR at a device-aware link rather than one store, change the card's
-platforms text to "iOS · Android", and update the footer line and both
-meta descriptions, which currently read "out now on Android, coming
-soon to iOS" on every page.
+**Launch state as of 2026-09-15 (iOS and Android both live).** iOS 4.0
+was approved 2026-09-13, READY_FOR_SALE, public at
+`https://apps.apple.com/us/app/sliceball-ball-drop-game/id6809610482`
+(device compatibility confirmed via the live listing: iPhone AND iPad,
+both `Requires iOS/iPadOS 15.0 or later`). The homepage `.app-card`
+carries a plain `.badge` reading "Game" (category, unchanged) with
+`.app-card__platforms` now reading "iOS · Android". The Sliceball hero's
+`.store-block` carries **both** official badges — Apple's "Download on
+the App Store" FIRST (`assets/store/apple-app-store-badge.svg`, Apple's
+placement rule; pulled from Apple's own badge-generator endpoint,
+`tools.applemediaservices.com`, with Jonathan's OK, 2026-09-15;
+unmodified, same as the Play badge rule), then Google's Play badge, both
+at the shared 60px `.store-badge img` height — **and two `.store-block__qr`
+elements**, one per store, each with its own caption ("Scan for the App
+Store" / "Scan for Google Play"). The one-QR "device-aware link" idea
+noted in the previous version of this section was **not built** —
+building a UA-sniffing redirect page was bigger scope than "match the
+Android badge/QR treatment," which is what was actually asked for, and
+Apple's own marketing guidelines say the App Store badge should link
+straight to the listing, not through a redirector. Two side-by-side QR
+codes turned out to look fine (`.store-block`'s existing `flex-wrap` +
+`.store-block__qr`'s own left-divider styling handled it with zero CSS
+changes — see the Sliceball page screenshots from 2026-09-15 if this
+ever needs re-litigating). If a real device-aware smart link is wanted
+later, that's a separate, bigger task. The Sliceball tablet band's pill
+is now a plain `.badge` "iPad · Out now" (no longer `.badge--coming-soon`)
+since the live App Store listing confirms iPad support — there is still
+no Android-tablet pill (the game isn't offered as a tablet experience on
+Android). The footer line and both meta descriptions now read "out now
+on iOS and Android" everywhere.
+
+QR generation: same method as the Play QR — `segno`, `dark="#1d1d1f"`
+(the `--color-text` token), `light="#fff"`, `scale=4` — via a throwaway
+venv (`segno` isn't installed system-wide on this Mac). The App Store
+URL is longer than the Play one so segno picked a bigger QR version
+(45 modules / 180px intrinsic vs Play's 41 modules / 164px) — harmless,
+since `.store-block__qr img` is fixed at 72×72 by CSS regardless of the
+source SVG's intrinsic size.
 
 ## `.reveal` — scroll reveal utility
 

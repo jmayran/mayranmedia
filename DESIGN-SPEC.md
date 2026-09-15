@@ -209,15 +209,38 @@ carries a plain `.badge` reading "Game" (category, unchanged) with
 the App Store" FIRST (`assets/store/apple-app-store-badge.svg`, Apple's
 placement rule; pulled from Apple's own badge-generator endpoint,
 `tools.applemediaservices.com`, with Jonathan's OK, 2026-09-15;
-unmodified, same as the Play badge rule), then Google's Play badge, both
-at the shared 60px `.store-badge img` height. Both are OTHER COMPANIES'
-artwork and are sized by height only, never stretched to match width —
-their designs are different aspect ratios by nature (measured: Apple's
-badge renders ~179px wide, Google's ~155px, both exactly 60px tall).
-Matching by height is what both companies' own guidelines actually call
-for; forcing equal width would distort one of the two trademarked badges,
-so that was **not** done even though it was asked about (2026-09-15) —
-explained on the call rather than silently applied.
+unmodified, same as the Play badge rule), then Google's Play badge —
+see "Badge sizing" below for exactly how tall each renders and why
+they're deliberately NOT the same `<img>` height.
+
+**Badge sizing — deliberately NOT the same `<img>` height (fixed
+2026-09-15).** First pass set `.store-badge img { height: 60px }` for
+both — same box height, which sounds like the obviously-correct way to
+match two badges, and is what most "how to add app store badges" guides
+say to do. Jonathan looked at the live result and flagged that Apple's
+badge still looked visibly bigger than Google's despite that. He was
+right, and it's not a rendering bug: measured the actual pixel content
+of each asset (PIL alpha-bbox on `google-play-badge.png`; the SVG
+rendered onto a solid-color background at 10x scale via headless Chrome,
+then bbox'd against that background, since headless `--screenshot`
+doesn't preserve real transparency) — **Google's PNG bakes in a lot of
+built-in clear space: the visible black pill is only ~67% of the PNG's
+own canvas height** (168px of 250px). **Apple's SVG has NO built-in
+padding at all — the pill IS the full canvas**, edge to edge (confirmed:
+content bbox = the entire viewBox). So a 60px `<img>` gave Apple a 60px
+pill and Google only a ~40px pill — the two boxes matched, the two
+pills didn't, and the pill is what a visitor actually sees as "the
+badge." Fix: `.store-badge--apple img { height: 46px }` (an extra
+modifier class on Apple's `<a class="store-badge">` in both `index.html`
+and `sliceball/index.html`), base `.store-badge img` raised to
+`68.45px` for Google. 46px pill (Apple, 100% fill) ≈ 68.45 × 168/250 ≈
+46px pill (Google) — the two VISIBLE PILLS now match; the two `<img>`
+boxes deliberately don't. Both still clear their own company's rule:
+Apple's ≥40pt minimum (46 > 40), and Google's "not smaller than the App
+Store badge" (its 68.45px container is now the larger of the two, even
+though the visible pills are equal). If either badge asset is ever
+replaced, re-measure its content bbox the same way before assuming a
+shared height will look right — don't just copy 46/68.45 forward blind.
 
 Each badge sits in its own `.store-block__store` group directly beside
 that store's own QR code (`.store-block__store` = badge + `.store-block__qr`,
@@ -778,10 +801,12 @@ video figures carry that class; the feature rows' screenshots sit in
 `.device-figure` needs no JS change.
 
 **Store block rules (`.store-block`, both heroes).** Official badge
-artwork only — Google's (`assets/store/google-play-badge.png`) and
-Apple's (`assets/store/apple-app-store-badge.svg`), both 60px tall,
-never recoloured/redrawn/cropped/stretched/animated, Apple's placed
-first (its own placement rule) — each paired with its own QR
+artwork only — Google's (`assets/store/google-play-badge.png`, 68.45px
+tall) and Apple's (`assets/store/apple-app-store-badge.svg`, 46px tall
+— see "Badge sizing" above for why they're deliberately different
+`<img>` heights, not the same one), never recoloured/redrawn/cropped/
+stretched/animated, Apple's placed first (its own placement rule) —
+each paired with its own QR
 (`assets/store/qr-app-store.svg` / `qr-google-play.svg`) in one
 `.store-block__store` group per store, so it's unambiguous which QR
 opens which listing. Both QRs are hidden on coarse-pointer devices and

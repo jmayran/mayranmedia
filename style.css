@@ -777,12 +777,25 @@ a.link-cta {
    Apple's App Store badge (assets/store/apple-app-store-badge.svg, pulled
    from Apple's own badge-generator endpoint with his OK, 2026-09-15) are
    each OTHER COMPANIES' artwork and must never be recoloured, re-drawn,
-   cropped, stretched, or animated — both are sized by height only
-   (`.store-badge img { height: 60px }`), never forced to a matching
-   width, since their own designs are different aspect ratios by nature
-   (measured 2026-09-15: Apple's badge renders ~179px wide, Google's
-   ~155px, both exactly 60px tall — matching by height is what both
-   companies' own guidelines actually call for, not matching by width).
+   cropped, stretched, or animated.
+
+   **Both badges are sized by height, but NOT the same height** — fixed
+   2026-09-15 after Jonathan flagged the two looking visibly mismatched
+   in size despite an equal 60px `<img>` height. Measured the actual
+   pixel content of each asset (PIL alpha-bbox on the Google PNG; the
+   Apple SVG rendered onto a solid-color background at 10x scale, then
+   bbox'd against that background, since its own canvas has no alpha to
+   inspect): **Google's PNG bakes in a lot of built-in clear space — the
+   visible pill is only ~67% of the PNG's own height** (168px of 250px)
+   — **while Apple's SVG has NO built-in padding at all — the pill IS
+   the full canvas**, edge to edge. So an equal `<img>` height made
+   Apple's pill look bigger, because all of its box is visible pill while
+   only two-thirds of Google's box is. The fix compensates: Apple's `<img>`
+   is set shorter (`.store-badge--apple`) so the two PILLS — not the two
+   boxes — end up the same visual height. Both still clear their own
+   guideline's minimum (Apple: ≥40pt; Google: "not smaller than the App
+   Store badge" — true here since its container is now the larger of the
+   two, even though the visible pills match).
 
    Since 2026-09-15 (two stores live) each store gets its own
    `.store-block__store` — badge directly beside ITS OWN QR code, so it's
@@ -814,8 +827,15 @@ a.link-cta {
 }
 .store-badge img {
   display: block;
-  height: 60px;
+  height: 68.45px;
   width: auto;
+}
+.store-badge--apple img {
+  /* 46px container == 46px visible pill (no built-in padding to eat
+     into it) — matches Google's 68.45px container's ~46px visible pill
+     (68.45 * 168/250). See the comment above this block for how both
+     numbers were measured. */
+  height: 46px;
 }
 .store-block__store {
   display: flex;

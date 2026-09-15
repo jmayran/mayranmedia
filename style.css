@@ -402,6 +402,22 @@ a.link-cta {
   color: var(--color-accent);
   border-color: var(--color-accent);
 }
+a.badge {
+  /* A `.badge` that is a real link (e.g. the tablet band's "iPad · Out
+     now") needs the same 44px touch target every other interactive
+     element gets, without visually growing the 28px pill — same
+     invisible hit-area-extension pattern as `.video-toggle::before`. */
+  position: relative;
+}
+a.badge::before {
+  content: "";
+  position: absolute;
+  inset: -8px 0;
+}
+a.badge:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
 
 /* ---- Hero ---------------------------------------------------------------- */
 .hero {
@@ -839,7 +855,10 @@ a.link-cta {
 }
 .store-block__store {
   display: flex;
+  flex: 1 1 0;
+  min-width: 340px;
   align-items: center;
+  justify-content: center;
   gap: var(--space-sm);
 }
 .store-block__store + .store-block__store {
@@ -865,6 +884,17 @@ a.link-cta {
 @media (pointer: coarse), (max-width: 640px) {
   .store-block__qr {
     display: none;
+  }
+  .store-block__store {
+    /* The 340px min-width exists to force each store's badge+QR pair to
+       wrap onto its own line rather than squeezing (see the comment
+       above `.store-block__store`) — but with the QR hidden here, a
+       bare badge is only ~140-220px wide, so that floor would force an
+       unnecessary stack. Drop it back to natural content width so both
+       badges sit side by side with their divider, like before either
+       QR existed. */
+    flex: 0 1 auto;
+    min-width: 0;
   }
 }
 

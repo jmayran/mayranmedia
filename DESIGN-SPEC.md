@@ -252,7 +252,48 @@ which store. Fitting two full groups on one line at desktop widths
 needed `.hero--story .hero__content`'s `max-width` bumped from the base
 840px to 900px (two groups measure ~831px plus their gap, a hair over
 840); h1/lead stay centred and short regardless of the extra width, so
-this doesn't affect their readability. The one-QR "device-aware link"
+this doesn't affect their readability.
+
+**The two groups are equal width (`flex: 1 1 0`), not their natural
+content width — fixed 2026-09-15, same day, after the badge-sizing
+fix above.** Apple's badge got narrower (46px height) and Google's got
+wider (68.45px) in that fix, so the two groups' NATURAL widths went from
+close-ish to visibly unequal (~374px vs ~437px at the time). Centering
+the `.store-block` as a whole still centers the total content, but the
+divider between the groups — the thing a visitor's eye actually reads as
+"the center" — sat well off the true center because one side was wider
+than the other. `flex: 1 1 0` makes both groups claim equal space so the
+divider lands within a few px of true center regardless of how the two
+badges' natural widths compare (verified: divider at 635.5px against a
+true center of 640px in a 900px block, i.e. within a single hairline).
+**This needs a `min-width: 340px` floor** on `.store-block__store` —
+without it, `flex-basis: 0` lets a group shrink past its content's
+natural size on a narrow container (the homepage's ~440px copy column),
+and text starts wrapping mid-word inside the QR caption instead of the
+whole group wrapping to its own line the way it used to. 340px sits
+comfortably below both groups' natural width (so it never kicks in on
+the 900px Sliceball hero, where the equal-split math above still holds)
+and comfortably above what a badge+QR pair needs to lay out cleanly (so
+it reliably forces a two-line stack instead of a squeeze on anything
+narrower). **On coarse-pointer/narrow devices this floor gets dropped
+back to 0** (same `@media (pointer: coarse), (max-width: 640px)` block
+that hides the QR) — with no QR in the group, a bare badge is only
+~140-220px wide, so keeping the 340px floor there forced an unnecessary
+vertical stack; dropping it restores the badges sitting side by side
+with their divider, same as before either QR component existed.
+
+**The tablet band's "iPad · Out now" pill is a real link now, not just
+a `<span>`** (2026-09-15) — same App Store URL as the phone badges,
+since Sliceball is one universal listing covering both iPhone and iPad
+(confirmed via the live listing: `Requires iPadOS 15.0 or later`, no
+separate iPad SKU). `a.badge` gets the same invisible-hit-area-extension
+treatment as `.video-toggle` (`::before` with `inset: -8px 0`) so it
+clears the 44px touch-target rule without visually growing the 28px
+pill — copy that pattern for any other `.badge` that becomes a real
+link in the future rather than just adding `min-height` directly (which
+would make the visible pill taller, not just its hit area).
+
+The one-QR "device-aware link"
 idea noted in an earlier version of this section was **not built** —
 a UA-sniffing redirect page is bigger scope than "match the Android
 badge/QR treatment, one QR per badge," which is what was actually asked

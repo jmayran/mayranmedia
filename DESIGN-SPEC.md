@@ -643,6 +643,28 @@ newest release), the store block gets real badges/QR, and
 that point this section's exceptions stop applying and Skim is just
 another app on the site.
 
+**Hero reverted to Sliceball, 2026-09-15, one day after the above.**
+After the App Store badge/QR update went live, Jonathan looked at the
+live site and asked whether the hero-jump was actually a good idea. The
+honest answer: no — a first-time visitor was landing on "In development"
+with no real store link and no way to actually get anything, while the
+real, live, downloadable Sliceball was one click away in the grid instead
+of front and center, and Skim's page has no email-capture or "notify me"
+hook, so the hero slot wasn't doing anything for it either. He asked for
+that recommendation to be carried out. **Reverted:** Sliceball is back in
+the homepage hero (real screenshot card, both live store badges each
+paired with their own QR in `.store-block__store` groups — see "Launch
+state" above), Skim moved into the `#apps` grid with its `.skim-scene`
+card. Meta description and the hero's copy lead with Sliceball again.
+Nothing else from the original placeholder work changed — `skim/index.html`
+still exists as-is, still not linked from support/privacy hubs, still no
+store links, per the "What's different" list above. **This is not a
+reversal of the storefront hero rule** ("features the most recently
+shipped app") — it's that rule holding again, now that the deliberate
+one-time exception for Skim has been undone. If Skim gets a real
+capture mechanism or gets closer to shipping, the hero-jump question can
+be revisited on its own merits rather than by default.
+
 ## Sliceball page (direction C · "Story", 2026-09-13)
 
 Jonathan chose this from three rendered directions on 2026-09-13
